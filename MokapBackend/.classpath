@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="com.google.gdt.eclipse.managedapis.MANAGED_API_CONTAINER/datastore-v1beta2r23lv1.18.0-rc"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-api-1.0-sdk-1.9.14.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-api-labs.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-endpoints-deps.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-endpoints.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-gcs-client-0.4.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-jsr107cache-1.9.14.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/asm-4.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/datanucleus-api-jdo-3.1.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/datanucleus-api-jpa-3.1.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/datanucleus-appengine-2.1.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/datanucleus-core-3.1.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/geronimo-jpa_2.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-appengine-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-servlet-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-services-datastore-v1beta2-rev23-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-appengine-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-gson-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-jackson2-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-jdo-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-oauth-client-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-oauth-client-appengine-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-oauth-client-servlet-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-gwt-18.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-2.1.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jdo-api-3.0.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jdo2-api-2.3-eb.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/joda-time-2.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsr107cache-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsr305-1.3.9.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/transaction-api-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-services-storage-v1-rev22-1.19.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/protobuf-java-2.4.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xpp3_min-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-18.0.jar"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>

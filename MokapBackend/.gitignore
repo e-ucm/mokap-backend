@@ -1,4 +1,3 @@
-/.settings/
 /test-classes/
 /gwt-unitCache/
 *.jar
@@ -6,3 +5,4 @@ log4j.properties
 .classpath
 .project
 .google_apis/
+/.settings/
