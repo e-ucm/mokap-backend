@@ -19,6 +19,7 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
 
+import es.eucm.mokap.backend.model.RepoElement;
 import es.eucm.mokap.backend.model.search.SearchResult;
 import es.eucm.mokap.backend.utils.GDSUtils;
 import es.eucm.mokap.backend.utils.JSONTranslator;
@@ -45,6 +46,12 @@ public class GDSImageServlet extends HttpServlet {
 		Results<ScoredDocument> results = index.search(searchstring);
 		res.setNumResults(results.getNumberFound());
 		
+		// Iterate the results and find the corresponding entities
+		for(ScoredDocument sd : results){
+			long keyId = Long.parseLong(sd.getOnlyField("sdkey").getText());
+			RepoElement elm = GDSUtils.RepoElementByKey(keyId);
+			res.addElement(elm);
+		}
 		
 		// Emit the response in JSON
 		resp.setContentType("application/json");
