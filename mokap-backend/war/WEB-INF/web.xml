@@ -8,7 +8,7 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>gdsimage</servlet-name>
-    <servlet-class>es.eucm.mokap.backend.server.servlets.GDSImageServlet</servlet-class>
+    <servlet-class>es.eucm.mokap.backend.servlets.GDSImageServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>

@@ -19,7 +19,22 @@ import es.eucm.mokap.backend.model.RepoElement;
 import es.eucm.mokap.backend.model.search.SearchResult;
 import es.eucm.mokap.backend.utils.GDSUtils;
 import es.eucm.mokap.backend.utils.JSONTranslator;
-
+/**
+ * Servlet that manages the GSD repoelements requests
+ * @author mario
+ * 
+ * 
+{
+"thumbnail": "test_tb",
+"author":{"name":"test_author","url":"test_url_aut"},
+"license": "cc-by",
+"width":100,
+"height":100,
+"description":{"strings":[{"lang":"sp","value":"test-description" }]},
+"name":{"strings":[{"lang":"sp","value":"test-name"}]},
+"tags": [{"strings":[{"lang":"sp","value":"tag1"}]},{"strings":[{"lang":"sp","value":"tag2" }]}]
+}
+ */
 public class GDSImageServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -3178885200866195963L;
@@ -82,9 +97,13 @@ public class GDSImageServlet extends HttpServlet {
 			      jb.append(line);
 			} catch (Exception e) { out.println(e.getMessage()); }
 			
+			try{
 			// Create a DS Entity with the data and store its contents.
 			Entity ent = JSONTranslator.EntityFromJSON(new String(jb));			
 			GDSUtils.store(ent);
+			}catch(Exception e){
+				out.println(e.getMessage());
+			}
 			
 		}else{
 			out.println("ERROR: Content type must be 'application/json' and charset must be 'UTF-8'");

@@ -2,7 +2,9 @@
 <datastore-indexes
   autoGenerate="true">
     <datastore-index kind="RepoElement" ancestor="false">
-        <property name="title" direction="asc" />
-        <property name="tags" direction="desc" />
+        <property name="name" direction="asc" />
+        <property name="tags" direction="asc" /><property
+        	name="description" direction="asc">
+</property>
     </datastore-index>    
 </datastore-indexes>
