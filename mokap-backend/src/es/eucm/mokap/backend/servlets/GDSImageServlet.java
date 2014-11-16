@@ -8,11 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.Results;
@@ -57,9 +53,12 @@ public class GDSImageServlet extends HttpServlet {
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
 		
+		String jsonString = JSONTranslator.JSONfromObject(res);
+		
 		PrintWriter out = resp.getWriter();		
-		out.print(JSONTranslator.JSONfromObject(res));
+		out.print(jsonString);
 		out.flush();
+		out.close();
 		
 	}
 	
