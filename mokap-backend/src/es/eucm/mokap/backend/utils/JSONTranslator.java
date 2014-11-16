@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import es.eucm.mokap.backend.model.RepoElement;
-import es.eucm.mokap.backend.model.search.SearchResult;
 
 public class JSONTranslator {
 	/**
