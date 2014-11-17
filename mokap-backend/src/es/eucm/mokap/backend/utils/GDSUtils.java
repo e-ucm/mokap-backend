@@ -17,12 +17,13 @@ public class GDSUtils {
 	 * Stores the received entity in GDS and adds it to the search index.
 	 * @param ent
 	 */
-	public static void store(Entity ent) {
+	public static Key store(Entity ent) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
 		Key k = datastore.put(ent);
 		
 		addToSearchIndex(ent, k);
+		return k;
 		
 	}
 	/**

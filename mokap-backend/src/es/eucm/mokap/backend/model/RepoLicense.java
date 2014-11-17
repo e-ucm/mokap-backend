@@ -48,7 +48,7 @@ public enum RepoLicense {
 			"cc-by-sa"), CC_BY_NC("cc-by-nc"), CC_BY_ND_NC("cc-by-nd-nc"), CC_BY_SA_NC(
 			"cc-by-sa-nc"), LINK_AUTHOR("link-author"), LEARNING_ONLY(
 			"learning-only"), UNDEFINED("undefined");
-	private final String value;
+	private String value;
 	private static Map<String, RepoLicense> constants = new HashMap<String, RepoLicense>();
 
 	static {
@@ -74,5 +74,12 @@ public enum RepoLicense {
 			return constant;
 		}
 	}
-
+	
+	public void setValue(String value){
+		this.value = value;
+	}
+	
+	public String getValue(){
+		return this.value;
+	}
 }

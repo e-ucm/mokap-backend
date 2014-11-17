@@ -1,12 +1,16 @@
 package es.eucm.mokap.backend.utils;
 
 import java.io.StringReader;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
+import es.eucm.mokap.backend.model.I18NString;
+import es.eucm.mokap.backend.model.I18NStrings;
 import es.eucm.mokap.backend.model.RepoElement;
 
 public class JSONTranslator {
@@ -16,10 +20,8 @@ public class JSONTranslator {
 	 * @return
 	 */
 	public static RepoElement repoElementFromJSON(String jsonString){
-		Gson gson = new GsonBuilder().create();
-		JsonReader reader = new JsonReader(new StringReader(jsonString));
-		reader.setLenient(true);
-		RepoElement relm = gson.fromJson(reader,RepoElement.class);	
+		Gson gson = new GsonBuilder().create();		
+		RepoElement relm = gson.fromJson(jsonString,RepoElement.class);	
 		return relm;
 	}
 	/**
@@ -32,12 +34,38 @@ public class JSONTranslator {
 		ent.setProperty("thumbnail",relm.getThumbnail());
 		ent.setProperty("authorname", relm.getAuthor().getName());
 		ent.setProperty("authorurl", relm.getAuthor().getUrl());		
-		ent.setProperty("license", relm.getLicense());
+		ent.setProperty("license", relm.getLicense().toString());
 		ent.setProperty("width", relm.getWidth());
 		ent.setProperty("height", relm.getHeight());
-		ent.setProperty("description", relm.getDescription().getStrings());
-		ent.setProperty("name",relm.getName().getStrings());
-		ent.setProperty("tags", relm.getTags());
+		
+		List<String> descriptionLangs = new LinkedList<String>();		
+		List<String> descriptionValues = new LinkedList<String>();
+		for(I18NString s : relm.getDescription().getStrings()){
+			descriptionLangs.add(s.getLang());
+			descriptionValues.add(s.getValue());
+		}					
+		ent.setProperty("descriptionlangs", descriptionLangs);
+		ent.setProperty("descriptionvalues", descriptionValues);
+		
+		List<String> nameLangs = new LinkedList<String>();
+		List<String> nameValues = new LinkedList<String>();
+		for(I18NString s : relm.getName().getStrings()){
+			nameLangs.add(s.getLang());
+			nameValues.add(s.getValue());		
+		}			
+		ent.setProperty("namelangs",nameLangs);
+		ent.setProperty("namevalues",nameValues);
+		
+		List<String> tagLangs = new LinkedList<String>();
+		List<String> tagValues = new LinkedList<String>();
+		for(I18NStrings tag : relm.getTags()){			
+			for(I18NString t : tag.getStrings()){
+				tagLangs.add(t.getLang());
+				tagValues.add(t.getValue());				
+			}			
+		}
+		ent.setProperty("tagsLangs", tagLangs);
+		ent.setProperty("tagsValues", tagValues);
 	
 		return ent;
 	}
@@ -47,11 +75,8 @@ public class JSONTranslator {
 	 * @param string
 	 * @return
 	 */
-	public static Entity EntityFromJSON(String string) throws Exception{
-		
-		
-		RepoElement relm = repoElementFromJSON(string);
-		
+	public static Entity EntityFromJSON(String string){		
+		RepoElement relm = repoElementFromJSON(string);		
 		return entityFromRepoElement(relm);
 	}
 	/**

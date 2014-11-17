@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.Results;
@@ -99,11 +100,16 @@ public class GDSImageServlet extends HttpServlet {
 			
 			try{
 			// Create a DS Entity with the data and store its contents.
-			Entity ent = JSONTranslator.EntityFromJSON(new String(jb));			
-			GDSUtils.store(ent);
+			out.println("Translating JSON...");
+			Entity ent = JSONTranslator.EntityFromJSON(new String(jb));		
+			out.println("Storing Object...");
+			Key k = GDSUtils.store(ent);
+			out.println("Stored with Key ["+k.toString()+"]");
 			}catch(Exception e){
-				out.println(e.getMessage());
+				out.println("ERROR: "+e.getClass()+" - "+e.getMessage()+" - "+e.getStackTrace());
+				e.printStackTrace();
 			}
+			out.println("DONE.");
 			
 		}else{
 			out.println("ERROR: Content type must be 'application/json' and charset must be 'UTF-8'");
