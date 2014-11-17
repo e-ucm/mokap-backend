@@ -35,8 +35,9 @@ public class GDSUtils {
 		//Build a Document Object
 		//Add all the attributes on which search can be done
 		Document newDoc = Document.newBuilder()
-		.addField(Field.newBuilder().setName("title").setText(ent.getProperty("title").toString()))
-		.addField(Field.newBuilder().setName("tags").setText(ent.getProperty("tags").toString()))
+		.addField(Field.newBuilder().setName("namevalues").setText(ent.getProperty("namevalues").toString()))
+		.addField(Field.newBuilder().setName("tagsValues").setText(ent.getProperty("tagsValues").toString()))
+		.addField(Field.newBuilder().setName("descriptionvalues").setText(ent.getProperty("descriptionvalues").toString()))
 		.addField(Field.newBuilder().setName("dskey").setText(k.getId()+""))
 		.build();
 		//Add the Document instance to the Search Index

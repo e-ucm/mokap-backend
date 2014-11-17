@@ -104,7 +104,7 @@ public class GDSImageServlet extends HttpServlet {
 			Entity ent = JSONTranslator.EntityFromJSON(new String(jb));		
 			out.println("Storing Object...");
 			Key k = GDSUtils.store(ent);
-			out.println("Stored with Key ["+k.toString()+"]");
+			out.println("Stored with Key ["+k.getId()+"]");
 			}catch(Exception e){
 				out.println("ERROR: "+e.getClass()+" - "+e.getMessage()+" - "+e.getStackTrace());
 				e.printStackTrace();

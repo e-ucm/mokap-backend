@@ -1,14 +1,11 @@
 package es.eucm.mokap.backend.utils;
 
-import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
-
 import es.eucm.mokap.backend.model.I18NString;
 import es.eucm.mokap.backend.model.I18NStrings;
 import es.eucm.mokap.backend.model.RepoElement;
@@ -58,14 +55,19 @@ public class JSONTranslator {
 		
 		List<String> tagLangs = new LinkedList<String>();
 		List<String> tagValues = new LinkedList<String>();
-		for(I18NStrings tag : relm.getTags()){			
+		List<Integer> tagStringCounts = new LinkedList<Integer>();
+		for(I18NStrings tag : relm.getTags()){	
+			int i = 0;
 			for(I18NString t : tag.getStrings()){
 				tagLangs.add(t.getLang());
-				tagValues.add(t.getValue());				
-			}			
+				tagValues.add(t.getValue());	
+				i++;
+			}	
+			tagStringCounts.add(i);
 		}
 		ent.setProperty("tagsLangs", tagLangs);
 		ent.setProperty("tagsValues", tagValues);
+		ent.setProperty("tagStringCounts", tagStringCounts);
 	
 		return ent;
 	}
