@@ -6,9 +6,13 @@ import java.util.List;
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import es.eucm.mokap.backend.model.I18NString;
 import es.eucm.mokap.backend.model.I18NStrings;
+import es.eucm.mokap.backend.model.RepoAuthor;
 import es.eucm.mokap.backend.model.RepoElement;
+import es.eucm.mokap.backend.model.RepoLibrary;
+import es.eucm.mokap.backend.model.RepoLicense;
 
 public class JSONTranslator {
 	/**
@@ -90,6 +94,77 @@ public class JSONTranslator {
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(res);
 		return jsonString;
+	}
+	/**
+	 * Parses a RepoElement from a GDS Entity.
+	 * @param ent
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static RepoElement repoElementFromEntity(Entity ent) {
+		RepoElement elm = new RepoElement();
+		
+		RepoAuthor aut = new RepoAuthor();
+		aut.setName(ent.getProperty("authorname").toString());
+		aut.setUrl(ent.getProperty("authorurl").toString());
+		elm.setAuthor(aut);
+		
+		RepoLicense lic = RepoLicense.fromValue(ent.getProperty("license").toString());
+		elm.setLicense(lic);
+		
+		elm.setHeight((double)ent.getProperty("height"));
+		elm.setWidth((double)ent.getProperty("width"));
+		
+		elm.setThumbnail(ent.getProperty("thumbnail").toString());
+		
+		I18NStrings desc = new I18NStrings();
+		List<String> descLangs = (List<String>)ent.getProperty("descriptionlangs");
+		List<String> descVals = (List<String>)ent.getProperty("descriptionvalues");		
+		for(int i = 0; i<descLangs.size();i++){
+			I18NString s = new I18NString();
+			s.setLang(descLangs.get(i));
+			s.setValue(descVals.get(i));
+			desc.addString(s);
+		}
+		elm.setDescription(desc);
+		
+		I18NStrings name = new I18NStrings();
+		List<String> nameLangs = (List<String>)ent.getProperty("namelangs");
+		List<String> nameVals = (List<String>)ent.getProperty("namevalues");		
+		for(int i = 0; i<nameLangs.size();i++){
+			I18NString s = new I18NString();
+			s.setLang(nameLangs.get(i));
+			s.setValue(nameVals.get(i));
+			name.addString(s);
+		}
+		elm.setDescription(name);
+		
+		List<I18NStrings> tags = new LinkedList<I18NStrings>();
+		List<String> tagLangs = (List<String>)ent.getProperty("tagsLangs");
+		List<String> tagVals = (List<String>)ent.getProperty("tagsValues");
+		List<Long> tagStrCount = (List<Long>)ent.getProperty("tagStringCounts");
+		//lista general de strings
+		List<I18NString> strings = new LinkedList<I18NString>();
+		for(int i=0;i<tagLangs.size();i++){
+			I18NString s = new I18NString();
+			s.setLang(tagLangs.get(i));
+			s.setValue(tagVals.get(i));
+			strings.add(s);
+		}
+		//separamos por distintos tags
+		int i = 0;
+		for(long numStrings : tagStrCount){
+			I18NStrings tS = new I18NStrings();
+			for(int j = 0; j < numStrings; j++){
+				tS.addString(strings.get(i));
+				i++;
+			}
+			tags.add(tS);
+		}
+		elm.setTags(tags);
+		
+		
+		return elm;
 	}
 
 }

@@ -28,7 +28,7 @@ import es.eucm.mokap.backend.utils.JSONTranslator;
 {
 "thumbnail": "test_tb",
 "author":{"name":"test_author","url":"test_url_aut"},
-"license": "cc-by",
+"license": CC_BY,
 "width":100,
 "height":100,
 "description":{"strings":[{"lang":"sp","value":"test-description" }]},
@@ -47,7 +47,7 @@ public class GDSImageServlet extends HttpServlet {
 	 * Returns the entity search results.
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		
+		PrintWriter out = resp.getWriter();		
 		SearchResult res = new SearchResult();
 		// Get the search string from the header
 		String searchstring = req.getHeader("searchstring");
@@ -60,18 +60,23 @@ public class GDSImageServlet extends HttpServlet {
 		
 		// Iterate the results and find the corresponding entities
 		for(ScoredDocument sd : results){
-			long keyId = Long.parseLong(sd.getOnlyField("sdkey").getText());
-			RepoElement elm = GDSUtils.RepoElementByKey(keyId);
-			res.addElement(elm);
+			long keyId = Long.parseLong(sd.getOnlyField("dskey").getText());
+			
+			Entity ent = GDSUtils.RepoElementByKey(keyId);
+			if(ent != null){
+				RepoElement elm = JSONTranslator.repoElementFromEntity(ent);
+				res.addElement(elm);
+			}
 		}
 		
 		// Emit the response in JSON
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
 		
+		
 		String jsonString = JSONTranslator.JSONfromObject(res);
 		
-		PrintWriter out = resp.getWriter();		
+		
 		out.print(jsonString);
 		out.flush();
 		out.close();

@@ -1,16 +1,22 @@
 package es.eucm.mokap.backend.utils;
 
+import java.util.List;
+
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.SearchServiceFactory;
-
-import es.eucm.mokap.backend.model.RepoElement;
 
 public class GDSUtils {
 	/**
@@ -46,9 +52,22 @@ public class GDSUtils {
 		
 		index.put(newDoc);
 	}
-	public static RepoElement RepoElementByKey(long keyId) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Gets the RepoElement that corresponds to the given key or null if there is none
+	 * @param keyId
+	 * @return
+	 */
+	public static Entity RepoElementByKey(long keyId) {
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();	
+		Key k = KeyFactory.createKey("RepoElement", keyId);
+		Filter keyFilter =
+				  new FilterPredicate(Entity.KEY_RESERVED_PROPERTY,
+				                      FilterOperator.EQUAL,
+				                      k);
+		Query q =  new Query("RepoElement").setFilter(keyFilter);
+		Entity result = datastore.prepare(q).asSingleEntity();
+		
+		return result;
 	}
 
 

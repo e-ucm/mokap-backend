@@ -58,5 +58,9 @@ public class I18NStrings {
 	public void setStrings(List<I18NString> strings) {
 		this.strings = strings;
 	}
+	
+	public void addString(I18NString s){
+		strings.add(s);
+	}
 
 }

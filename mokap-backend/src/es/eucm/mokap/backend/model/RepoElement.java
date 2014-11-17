@@ -66,8 +66,8 @@ public class RepoElement {
 	 * 
 	 */
 	private RepoLicense license;
-	private float width;
-	private float height;
+	private double width;
+	private double height;
 	/**
 	 * An internationalized String (support for multiple languages)
 	 * 
@@ -134,20 +134,20 @@ public class RepoElement {
 		this.license = license;
 	}
 
-	public float getWidth() {
+	public double getWidth() {
 		return width;
 	}
 
-	public void setWidth(float width) {
-		this.width = width;
+	public void setWidth(double d) {
+		this.width = d;
 	}
 
-	public float getHeight() {
+	public double getHeight() {
 		return height;
 	}
 
-	public void setHeight(float height) {
-		this.height = height;
+	public void setHeight(double d) {
+		this.height = d;
 	}
 
 	/**
