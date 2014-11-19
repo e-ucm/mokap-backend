@@ -1,5 +1,6 @@
 package es.eucm.mokap.backend.servlets;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -7,6 +8,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.search.Index;
+import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
+import com.google.appengine.api.search.SearchServiceFactory;
+
+import es.eucm.mokap.backend.model.RepoElement;
 import es.eucm.mokap.backend.model.search.SearchResult;
 import es.eucm.mokap.backend.utils.GDSUtils;
 import es.eucm.mokap.backend.utils.JSONUtils;

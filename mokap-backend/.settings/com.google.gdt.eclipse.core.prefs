@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+jarsExcludedFromWebInfLib=
 launchConfigExternalUrlPrefix=http\://1-dot-test-mokap.appspot.com/
 warSrcDir=war
 warSrcDirIsOutput=true
