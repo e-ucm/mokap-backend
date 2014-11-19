@@ -1,8 +1,5 @@
 package es.eucm.mokap.backend.utils;
 
-import java.util.List;
-
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -16,7 +13,12 @@ import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
+
+import es.eucm.mokap.backend.model.RepoElement;
+import es.eucm.mokap.backend.model.search.SearchResult;
 
 public class GDSUtils {
 	/**
@@ -68,6 +70,42 @@ public class GDSUtils {
 		Entity result = datastore.prepare(q).asSingleEntity();
 		
 		return result;
+	}
+	
+	public static SearchResult searchGDSByString(String searchstring) {
+		SearchResult res = new SearchResult();		
+		// Select the search index to use				
+		IndexSpec indexSpec = IndexSpec.newBuilder().setName("RepoElement").build();
+		Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
+		
+		Results<ScoredDocument> results = index.search(searchstring);
+		res.setNumResults(results.getNumberFound());
+		
+		// Iterate the results and find the corresponding entities
+		for(ScoredDocument sd : results){
+			long keyId = Long.parseLong(sd.getOnlyField("dskey").getText());
+			
+			Entity ent = GDSUtils.RepoElementByKey(keyId);
+			if(ent != null){
+				RepoElement elm = RepoElement.fromGDSEntity(ent);
+				res.addElement(elm);
+			}
+		}
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @param jb
+	 * @return
+	 */
+	public static long insertJSONIntoGDS(StringBuffer jb) {
+		// Create a GDS Entity with the data.				
+		Entity ent = JSONUtils.EntityFromJSON(new String(jb));		
+		// Store the Entity and keep its Key.							
+		Key k = GDSUtils.store(ent);
+		long keyId = k.getId();
+		return keyId;
 	}
 
 
