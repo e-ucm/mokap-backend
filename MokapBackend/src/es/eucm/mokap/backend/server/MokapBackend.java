@@ -29,6 +29,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonSyntaxException;
 
+import es.eucm.mokap.backend.model.response.GetResponse;
 import es.eucm.mokap.backend.model.response.PostResponse;
 import es.eucm.mokap.backend.utils.CloudStorageAccess;
 import es.eucm.mokap.backend.utils.GoogleUtils;
@@ -76,6 +77,27 @@ public class MokapBackend extends HttpServlet {
 		out.flush();
 		out.close();
 	}
+	
+	/**
+	 * Method: GET
+	 * Processes get requests.	 
+	 */
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {		
+		PrintWriter out = resp.getWriter();				
+		
+		// Get the search string from the header
+		String searchString = req.getHeader("searchstring");
+		
+		GetResponse gr = GoogleUtils.searchByString(searchString);	
+		
+		out.print(gr.toJsonString());
+		out.flush();
+		out.close();
+	}
+	
+	/*
+	 * *************************************************************************************
+	 */
 
 	/**
 	 * @param tempFileName
@@ -134,6 +156,8 @@ public class MokapBackend extends HttpServlet {
 		}
 		// Create the Search Index Document			
 		GoogleUtils.addToSearchIndex(ent, k);
+		
+		// TODO Check everything went ok
 		
 		// Everything went ok, so we delete the temp file
 		csa.deleteFile(tempFileName);
