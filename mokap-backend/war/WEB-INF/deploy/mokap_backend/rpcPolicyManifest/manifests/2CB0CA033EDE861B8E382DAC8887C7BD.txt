@@ -1,2 +1,0 @@
-serviceClass: es.eucm.mokap.backend.client.GreetingService
-path: 1EC1AEC3129604C46833DAA37BA9A2E3.gwt.rpc

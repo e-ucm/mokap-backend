@@ -1,3 +1,0 @@
-# Module mokap_backend
-# RPC service class, partial path of RPC policy file
-es.eucm.mokap.backend.client.GreetingService, 1EC1AEC3129604C46833DAA37BA9A2E3.gwt.rpc
