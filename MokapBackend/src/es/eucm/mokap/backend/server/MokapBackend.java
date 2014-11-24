@@ -80,7 +80,8 @@ public class MokapBackend extends HttpServlet {
 	
 	/**
 	 * Method: GET
-	 * Processes get requests.	 
+	 * Processes get requests.	
+	 * -Requires a header called searchstring. It performs an index search with the keyword in that header. 
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {		
 		PrintWriter out = resp.getWriter();				
