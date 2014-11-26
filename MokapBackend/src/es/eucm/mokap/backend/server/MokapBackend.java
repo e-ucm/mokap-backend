@@ -46,7 +46,7 @@ public class MokapBackend extends HttpServlet {
 	 * Processes post requests. 
 	 * -Requests must be multipart/form-data.
 	 * -The field with the file must be named "file".
-	 * -The file must bi a .zip compressed file with the following contents:
+	 * -The file must be a .zip compressed file with the following contents:
 	 * 	-contents.zip -> A zip file with the information we'll store in Cloud Storage
 	 * 	-A folder with the desired thumbnails
 	 * 	-descriptor.json -> A .json file with the indexing information to store in Datastore
@@ -64,7 +64,10 @@ public class MokapBackend extends HttpServlet {
 				assignedKeyId = processPostedTempFile(tempFileName);				
 				// Send the response
 				pr.setId(assignedKeyId);
-				pr.setMessage("OK.");				
+				if(assignedKeyId != 0)
+					pr.setMessage("OK.");
+				else
+					pr.setError("ERROR: Couldn't process the file.");
 			}else{
 				pr.setError("ERROR: Couldn't upload the file.");	
 			}
@@ -85,9 +88,16 @@ public class MokapBackend extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {		
 		PrintWriter out = resp.getWriter();				
-		
-		// Get the search string from the header
-		String searchString = req.getHeader("searchstring");
+		String searchString = "";
+		// Get the search string from the header / parameter
+		String searchStringH = req.getHeader("searchstring");
+		String searchStringP = req.getParameter("searchstring");
+		if(searchStringP != ""){
+			searchString = searchStringP;
+		}
+		if(searchStringH != ""){
+			searchString = searchStringH;
+		}
 		
 		GetResponse gr = GoogleUtils.searchByString(searchString);	
 		
@@ -137,34 +147,40 @@ public class MokapBackend extends HttpServlet {
 		}
 		
 		try{
-		
-			// Analizar json
-			Map<String, String> entMap = Utils.jsonToMap(descriptor);
-			// Parse the map into an entity
-			Entity ent = new Entity("Resource");			    
-			for(String key :entMap.keySet()){
-				ent.setProperty(key, entMap.get(key));
-			}		    
-			// Store the entity (GDS) and get the Id
-			Key k = datastore.put(ent);
-			assignedKeyId = k.getId();
-			
-			// Store the contents file with the Id in the name
-			ByteArrayInputStream bis = new ByteArrayInputStream(content);
-			csa.storeFile(bis, assignedKeyId+".zip");
-			
-			// Store the thumbnails in a folder with the id as the name
-			for(String key : tns.keySet()){
-				ByteArrayInputStream imgs = new ByteArrayInputStream(tns.get(key)); 
-				csa.storeFile(imgs, assignedKeyId+"/"+key);
+			if(descriptor != null &&
+				!descriptor.equals("") &&
+				content != null
+					){
+					// Analizar json
+					Map<String, String> entMap = Utils.jsonToMap(descriptor);
+					// Parse the map into an entity
+					Entity ent = new Entity("Resource");			    
+					for(String key :entMap.keySet()){
+						ent.setProperty(key, entMap.get(key));
+					}		    
+					// Store the entity (GDS) and get the Id
+					Key k = datastore.put(ent);
+					assignedKeyId = k.getId();
+					
+					// Store the contents file with the Id in the name
+					ByteArrayInputStream bis = new ByteArrayInputStream(content);
+					csa.storeFile(bis, assignedKeyId+".zip");
+					
+					// Store the thumbnails in a folder with the id as the name
+					for(String key : tns.keySet()){
+						ByteArrayInputStream imgs = new ByteArrayInputStream(tns.get(key)); 
+						csa.storeFile(imgs, assignedKeyId+"/"+key);
+					}
+					// Create the Search Index Document			
+					GoogleUtils.addToSearchIndex(ent, k);
+					
+					// TODO Check everything went ok
+					
+					// Everything went ok, so we delete the temp file
+					csa.deleteFile(tempFileName);
+			}else{
+				assignedKeyId = 0;
 			}
-			// Create the Search Index Document			
-			GoogleUtils.addToSearchIndex(ent, k);
-			
-			// TODO Check everything went ok
-			
-			// Everything went ok, so we delete the temp file
-			csa.deleteFile(tempFileName);
 		}catch(Exception e){
 			e.printStackTrace();
 			assignedKeyId = 0;
