@@ -135,33 +135,40 @@ public class MokapBackend extends HttpServlet {
 		    }
 		    zis.closeEntry();
 		}
-		// Analizar json
-		Map<String, String> entMap = Utils.jsonToMap(descriptor);
-		// Parse the map into an entity
-		Entity ent = new Entity("Resource");			    
-		for(String key :entMap.keySet()){
-			ent.setProperty(key, entMap.get(key));
-		}		    
-		// Store the entity (GDS) and get the Id
-		Key k = datastore.put(ent);
-		assignedKeyId = k.getId();
 		
-		// Store the contents file with the Id in the name
-		ByteArrayInputStream bis = new ByteArrayInputStream(content);
-		csa.storeFile(bis, assignedKeyId+".zip");
+		try{
 		
-		// Store the thumbnails in a folder with the id as the name
-		for(String key : tns.keySet()){
-			ByteArrayInputStream imgs = new ByteArrayInputStream(tns.get(key)); 
-			csa.storeFile(imgs, assignedKeyId+"/"+key);
+			// Analizar json
+			Map<String, String> entMap = Utils.jsonToMap(descriptor);
+			// Parse the map into an entity
+			Entity ent = new Entity("Resource");			    
+			for(String key :entMap.keySet()){
+				ent.setProperty(key, entMap.get(key));
+			}		    
+			// Store the entity (GDS) and get the Id
+			Key k = datastore.put(ent);
+			assignedKeyId = k.getId();
+			
+			// Store the contents file with the Id in the name
+			ByteArrayInputStream bis = new ByteArrayInputStream(content);
+			csa.storeFile(bis, assignedKeyId+".zip");
+			
+			// Store the thumbnails in a folder with the id as the name
+			for(String key : tns.keySet()){
+				ByteArrayInputStream imgs = new ByteArrayInputStream(tns.get(key)); 
+				csa.storeFile(imgs, assignedKeyId+"/"+key);
+			}
+			// Create the Search Index Document			
+			GoogleUtils.addToSearchIndex(ent, k);
+			
+			// TODO Check everything went ok
+			
+			// Everything went ok, so we delete the temp file
+			csa.deleteFile(tempFileName);
+		}catch(Exception e){
+			e.printStackTrace();
+			assignedKeyId = 0;
 		}
-		// Create the Search Index Document			
-		GoogleUtils.addToSearchIndex(ent, k);
-		
-		// TODO Check everything went ok
-		
-		// Everything went ok, so we delete the temp file
-		csa.deleteFile(tempFileName);
 		return assignedKeyId;
 	}
 
@@ -207,6 +214,8 @@ public class MokapBackend extends HttpServlet {
 				is.close();
 			} //end while
 		} catch (FileUploadException e) {					
+			e.printStackTrace();
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
 		return tempFileName;

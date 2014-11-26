@@ -13,6 +13,7 @@ import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.google.appengine.tools.cloudstorage.RetryParams;
 import com.google.gwt.thirdparty.guava.common.io.ByteStreams;
 
 public class CloudStorageAccess {
@@ -28,8 +29,8 @@ public class CloudStorageAccess {
 	 * @param bucketName name of the Cloud Storage bucket
 	 * @throws IOException
 	 */
-	public void storeFile(InputStream is, String fileName) throws IOException {
-		GcsService gcsService = GcsServiceFactory.createGcsService();
+	public void storeFile(InputStream is, String fileName) throws Exception {
+		GcsService gcsService = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
 		GcsFilename filename = new GcsFilename(bucketName, fileName);
 		GcsFileOptions options = GcsFileOptions.getDefaultInstance();
 		GcsOutputChannel writeChannel = gcsService.createOrReplace(filename, options);						
