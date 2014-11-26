@@ -66,6 +66,7 @@ public class GoogleUtils {
 			long keyId = Long.parseLong(sd.getOnlyField("entityRef").getText());
 			
 			Map<String, String> ent = getEntityById(keyId);
+			ent.put("entityRef", keyId+"");
 			gr.addResult(ent);
 		}
 		return gr;
@@ -79,16 +80,18 @@ public class GoogleUtils {
 	public static Map<String,String> getEntityById(long keyId) {
 		Map<String,String> m = new HashMap<String,String>();
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();	
-		Key k = KeyFactory.createKey("RepoElement", keyId);
+		Key k = KeyFactory.createKey("Resource", keyId);
 		Filter keyFilter =
 				  new FilterPredicate(Entity.KEY_RESERVED_PROPERTY,
 				                      FilterOperator.EQUAL,
 				                      k);
-		Query q =  new Query("Resource").setFilter(keyFilter);
+		Query q =  new Query("Resource").setFilter(keyFilter);		
 		Entity result = datastore.prepare(q).asSingleEntity();
-		Map<String,Object> props = result.getProperties();
-		for(String key : props.keySet())
-			m.put(key, props.get(key).toString());
+		if(result != null){
+			Map<String,Object> props = result.getProperties();
+			for(String key : props.keySet())
+				m.put(key, props.get(key).toString());
+		}
 		return m;
 	}
 	

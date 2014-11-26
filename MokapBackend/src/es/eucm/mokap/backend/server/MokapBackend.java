@@ -39,8 +39,8 @@ public class MokapBackend extends HttpServlet {
 	private static final long serialVersionUID = -1883047452996950111L;
 	private static String BUCKET_NAME = System.getProperty("backend.BUCKET_NAME");
 	private static int MAX_FILE_SIZE = Integer.parseInt(System.getProperty("backend.MAX_FILE_SIZE"));
-	CloudStorageAccess csa = new CloudStorageAccess(BUCKET_NAME);
-	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	private static CloudStorageAccess csa = new CloudStorageAccess(BUCKET_NAME);
+	private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	/**
 	 * Method: POST
 	 * Processes post requests. 
