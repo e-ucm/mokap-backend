@@ -144,7 +144,7 @@ public class GoogleAccess {
 			
 			Map<String, String> ent = getEntityById(keyId);
 			ent.put("entityRef", keyId+"");
-			ent.put("contentUrl", DOWNLOAD_URL+keyId+".zip");
+			ent.put("contentsUrl", DOWNLOAD_URL+keyId+".zip");
 			List<String> tnsUrls = getTnsUrls(keyId);			
 			List<String> tnsWidths = new LinkedList<String>();
 			List<String> tnsHeights = new LinkedList<String>();
@@ -162,9 +162,9 @@ public class GoogleAccess {
 				
 			}
 			
-			ent.put("tnsUrls", tnsUrls.toString());
-			ent.put("tnsWidths", tnsWidths.toString());
-			ent.put("tnsHeights", tnsHeights.toString());
+			ent.put("thumbnailUrlList", tnsUrls.toString());
+			ent.put("thumbnailWidthList", tnsWidths.toString());
+			ent.put("thumbnailHeightList", tnsHeights.toString());
 			
 			gr.addResult(ent);
 			}catch(Exception e){
