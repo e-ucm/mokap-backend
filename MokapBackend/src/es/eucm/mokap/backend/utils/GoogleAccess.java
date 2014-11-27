@@ -142,7 +142,8 @@ public class GoogleAccess {
 		Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
 		// Perform the search
 		Results<ScoredDocument> results = index.search(query);
-		gr.setSearchCursor(results.getCursor().toWebSafeString());
+		if(results.getCursor()!=null)
+			gr.setSearchCursor(results.getCursor().toWebSafeString());
 		gr.setCount(results.getNumberReturned());
 		gr.setTotal(results.getNumberFound());	
 		
