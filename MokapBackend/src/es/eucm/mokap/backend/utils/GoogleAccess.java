@@ -20,10 +20,12 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
@@ -125,46 +127,72 @@ public class GoogleAccess {
 	 * @return A GetResponse object
 	 * @throws IOException 
 	 */
-	public SearchResponse searchByString(String searchString) throws IOException {
+	public SearchResponse searchByString(String searchString) throws IOException{
 		SearchResponse gr = new SearchResponse();
-		// Select the search index to use		
+		
+		Cursor cursor = Cursor.newBuilder().build();
+		
+		com.google.appengine.api.search.Query query = 
+				com.google.appengine.api.search.Query.newBuilder().setOptions(
+			     QueryOptions.newBuilder().setCursor(cursor).build()).build(searchString);
+	
+		
+		// Select the search index to use	
 		IndexSpec indexSpec = IndexSpec.newBuilder().setName("Resource").build();
 		Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
 		// Perform the search
-		Results<ScoredDocument> results = index.search(searchString);
+		Results<ScoredDocument> results = index.search(query);
+		gr.setSearchCursor(results.getCursor().toWebSafeString());
 		gr.setCount(results.getNumberReturned());
-		gr.setTotal(results.getNumberFound());
-		//gr.setStart(results.getCursor().);
+		gr.setTotal(results.getNumberFound());	
 		
 		// Iterate the results and find the corresponding entities
+		fillResults(gr, results);
+		return gr;
+		
+	}
+	
+	public SearchResponse searchByString(String searchString, String cursorString) throws IOException {
+		if(cursorString != null){	
+			SearchResponse gr = new SearchResponse();
+			// Select the search index to use	
+		
+			Cursor cursor = Cursor.newBuilder().build(cursorString);
+			
+			com.google.appengine.api.search.Query query = 
+					com.google.appengine.api.search.Query.newBuilder().setOptions(
+				     QueryOptions.newBuilder().setCursor(cursor).build()).build(searchString);
+		
+			IndexSpec indexSpec = IndexSpec.newBuilder().setName("Resource").build();
+			Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
+			// Perform the search
+			Results<ScoredDocument> results = index.search(query);
+			Cursor resCursor = results.getCursor();
+			gr.setSearchCursor(resCursor.toWebSafeString());
+			gr.setCount(results.getNumberReturned());
+			gr.setTotal(results.getNumberFound());
+			
+			// Iterate the results and find the corresponding entities
+			fillResults(gr,results);
+		
+			return gr;
+		}else{
+			return searchByString(searchString);
+		}
+	}
+	/**
+	 * Fills a SearchResponse with a set of search results
+	 * @param gr
+	 * @param results
+	 */
+	private void fillResults(SearchResponse gr, Results<ScoredDocument> results) {
 		for(ScoredDocument sd : results){
 			String debug = "";
 			try{
 			long keyId = Long.parseLong(sd.getOnlyField("entityRef").getText());
 			
 			Map<String, String> ent = getEntityById(keyId);
-			ent.put("entityRef", keyId+"");
-			ent.put("contentsUrl", DOWNLOAD_URL+keyId+".zip");
-			List<String> tnsUrls = getTnsUrls(keyId);			
-			List<String> tnsWidths = new LinkedList<String>();
-			List<String> tnsHeights = new LinkedList<String>();
-			for(String tn : tnsUrls){
-				int lastSeparator = tn.lastIndexOf("/")+1;	
-				debug+="last/:"+lastSeparator;						
-				String end = tn.substring(lastSeparator);
-				debug+="   end:"+end;
-				String res = end.split("\\.")[0];
-				debug+="   res:"+res;
-				String[] resolutionParams = res.split("x");
-				debug+="   params:"+resolutionParams.toString()+"/n";
-				tnsWidths.add(resolutionParams[0]);
-				tnsHeights.add(resolutionParams[1]);
-				
-			}
-			
-			ent.put("thumbnailUrlList", tnsUrls.toString());
-			ent.put("thumbnailWidthList", tnsWidths.toString());
-			ent.put("thumbnailHeightList", tnsHeights.toString());
+			prepareResponseEntity(keyId, ent);
 			
 			gr.addResult(ent);
 			}catch(Exception e){
@@ -176,7 +204,33 @@ public class GoogleAccess {
 				gr.setMessage("ERROR: "+debug);
 			}
 		}
-		return gr;
+	}
+	/**
+	 * Calculates and adds the missing fields to the entity we're sending to the user
+	 * @param keyId
+	 * @param ent
+	 * @throws IOException
+	 */
+	private void prepareResponseEntity(long keyId,
+			Map<String, String> ent) throws IOException {
+		ent.put("entityRef", keyId+"");
+		ent.put("contentsUrl", DOWNLOAD_URL+keyId+".zip");
+		List<String> tnsUrls = getTnsUrls(keyId);			
+		List<String> tnsWidths = new LinkedList<String>();
+		List<String> tnsHeights = new LinkedList<String>();
+		for(String tn : tnsUrls){
+			int lastSeparator = tn.lastIndexOf("/")+1;							
+			String end = tn.substring(lastSeparator);			
+			String res = end.split("\\.")[0];			
+			String[] resolutionParams = res.split("x");			
+			tnsWidths.add(resolutionParams[0]);
+			tnsHeights.add(resolutionParams[1]);			
+		}
+		
+		ent.put("thumbnailUrlList", tnsUrls.toString());
+		ent.put("thumbnailWidthList", tnsWidths.toString());
+		ent.put("thumbnailHeightList", tnsHeights.toString());
+		
 	}
 	/**
 	 * Returns a list with the url's (filenames) of all the thumbnails related to the keyId

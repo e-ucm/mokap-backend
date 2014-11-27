@@ -96,8 +96,9 @@ public class MokapBackend extends HttpServlet {
 		if(searchStringH!=null){
 			searchString = searchStringH;
 		}
+		String searchCursor = req.getParameter("searchcursor");
 		
-		SearchResponse gr = ga.searchByString(searchString);	
+		SearchResponse gr = ga.searchByString(searchString, searchCursor);	
 		
 		out.print(gr.toJsonString());
 		out.flush();

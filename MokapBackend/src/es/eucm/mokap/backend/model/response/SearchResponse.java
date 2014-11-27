@@ -4,11 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+
+
 public class SearchResponse extends Response {
 	private int count;
 	private long total;
-	private int start;
+	
 	private String message;
+	private String searchCursor;
 	private List<Map<String,String>> results = new LinkedList<Map<String,String>>();
 	
 	public void addResult(Map<String, String> res){
@@ -36,19 +39,19 @@ public class SearchResponse extends Response {
 		this.total = l;
 	}
 
-	public int getStart() {
-		return start;
-	}
-
-	public void setStart(int start) {
-		this.start = start;
-	}
-
 	public String getMessage() {
 		return message;
 	}
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getSearchCursor() {
+		return searchCursor;
+	}
+
+	public void setSearchCursor(String string) {
+		this.searchCursor = string;
 	}
 }
