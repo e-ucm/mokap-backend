@@ -27,8 +27,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonSyntaxException;
 
-import es.eucm.mokap.backend.model.response.GetResponse;
-import es.eucm.mokap.backend.model.response.PostResponse;
+import es.eucm.mokap.backend.model.response.SearchResponse;
+import es.eucm.mokap.backend.model.response.InsertResponse;
 import es.eucm.mokap.backend.utils.GoogleAccess;
 import es.eucm.mokap.backend.utils.Utils;
 
@@ -50,7 +50,7 @@ public class MokapBackend extends HttpServlet {
 	 * 	-descriptor.json -> A .json file with the indexing information to store in Datastore
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		PostResponse pr = new PostResponse();
+		InsertResponse pr = new InsertResponse();
 		PrintWriter out = resp.getWriter();				
 		long assignedKeyId = 0;		
 	
@@ -97,7 +97,7 @@ public class MokapBackend extends HttpServlet {
 			searchString = searchStringH;
 		}
 		
-		GetResponse gr = ga.searchByString(searchString);	
+		SearchResponse gr = ga.searchByString(searchString);	
 		
 		out.print(gr.toJsonString());
 		out.flush();

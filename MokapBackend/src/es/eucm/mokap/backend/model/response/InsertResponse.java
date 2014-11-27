@@ -1,6 +1,6 @@
 package es.eucm.mokap.backend.model.response;
 
-public class PostResponse extends Response{
+public class InsertResponse extends Response{
 
 	private long id;
 	private String message;

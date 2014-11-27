@@ -39,7 +39,7 @@ import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
 import com.google.gwt.thirdparty.guava.common.io.ByteStreams;
 
-import es.eucm.mokap.backend.model.response.GetResponse;
+import es.eucm.mokap.backend.model.response.SearchResponse;
 
 public class GoogleAccess {
 	private String bucketName;
@@ -125,8 +125,8 @@ public class GoogleAccess {
 	 * @return A GetResponse object
 	 * @throws IOException 
 	 */
-	public GetResponse searchByString(String searchString) throws IOException {
-		GetResponse gr = new GetResponse();
+	public SearchResponse searchByString(String searchString) throws IOException {
+		SearchResponse gr = new SearchResponse();
 		// Select the search index to use		
 		IndexSpec indexSpec = IndexSpec.newBuilder().setName("Resource").build();
 		Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);

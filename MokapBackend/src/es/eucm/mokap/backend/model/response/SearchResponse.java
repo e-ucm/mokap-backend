@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GetResponse extends Response {
+public class SearchResponse extends Response {
 	private int count;
 	private long total;
 	private int start;
