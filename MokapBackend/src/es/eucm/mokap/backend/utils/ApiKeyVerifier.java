@@ -1,0 +1,55 @@
+package es.eucm.mokap.backend.utils;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+/**
+ * Simple tool used to verify if a given API Key belongs to a registered application
+ * @author jtorrente
+ *
+ */
+public class ApiKeyVerifier {
+	
+	private static Properties properties=null;
+	
+	private static final String VALID_KEYS_FILE = "keys.api";
+	
+	private static void loadValidKeys(){
+		if (properties==null){
+			properties = new Properties();
+			try {
+				properties.load(new FileInputStream(VALID_KEYS_FILE));
+			} catch (IOException e) {
+				properties = null;
+				throw new RuntimeException("An error occurred while loading the supported keys");
+			}
+		}
+	}
+
+	/**
+	 * Returns true if the {@param key} provided belongs to a registered application client, false otherwise
+	 * @param key	Api key provided as an argument by the client that queried the backend (apikey="XXXXX")
+	 * @return	True if valid, false otherwise
+	 * @throws RuntimeException if the file where valid api keys are stored cannot be loaded
+	 */
+	public static boolean isValidKey(String key){
+		loadValidKeys();
+		return (properties!=null && properties.containsKey(key));
+	}
+	
+	/**
+	 * Returns the name of the application registered to the given api key, or @null if it is not registered to any app.
+	 * @param key	Api key provided as an argument by the client that queried the backend (apikey="XXXXX")
+	 * @return The name of the app registered to the api key provided, null if no app is registered to that key
+	 * @throws RuntimeException if the file where valid api keys are stored cannot be loaded
+	 */
+	public static String getClientName(String key){
+		loadValidKeys();
+		if (properties==null){
+			return null;
+		}
+		return properties.getProperty(key);
+	}
+
+}
