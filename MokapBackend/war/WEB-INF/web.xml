@@ -16,6 +16,16 @@
     <url-pattern>/backend</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>download</servlet-name>
+    <servlet-class>es.eucm.mokap.backend.server.ResourceDownload</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>download</servlet-name>
+    <url-pattern>/download</url-pattern>
+  </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>MokapBackend.html</welcome-file>

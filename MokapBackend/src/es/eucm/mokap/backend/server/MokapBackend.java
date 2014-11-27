@@ -23,24 +23,22 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonSyntaxException;
 
 import es.eucm.mokap.backend.model.response.GetResponse;
 import es.eucm.mokap.backend.model.response.PostResponse;
-import es.eucm.mokap.backend.utils.CloudStorageAccess;
-import es.eucm.mokap.backend.utils.GoogleUtils;
+import es.eucm.mokap.backend.utils.GoogleAccess;
 import es.eucm.mokap.backend.utils.Utils;
 
 public class MokapBackend extends HttpServlet {
 	private static final long serialVersionUID = -1883047452996950111L;
 	private static String BUCKET_NAME = System.getProperty("backend.BUCKET_NAME");
 	private static int MAX_FILE_SIZE = Integer.parseInt(System.getProperty("backend.MAX_FILE_SIZE"));
-	private static CloudStorageAccess csa = new CloudStorageAccess(BUCKET_NAME);
-	private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	private static GoogleAccess ga = new GoogleAccess(BUCKET_NAME);
+	
+	
 	/**
 	 * Method: POST
 	 * Processes post requests. 
@@ -92,14 +90,14 @@ public class MokapBackend extends HttpServlet {
 		// Get the search string from the header / parameter
 		String searchStringH = req.getHeader("searchstring");
 		String searchStringP = req.getParameter("searchstring");
-		if(searchStringP != ""){
+		if(searchStringP!=null){
 			searchString = searchStringP;
 		}
-		if(searchStringH != ""){
+		if(searchStringH!=null){
 			searchString = searchStringH;
 		}
 		
-		GetResponse gr = GoogleUtils.searchByString(searchString);	
+		GetResponse gr = ga.searchByString(searchString);	
 		
 		out.print(gr.toJsonString());
 		out.flush();
@@ -124,7 +122,7 @@ public class MokapBackend extends HttpServlet {
 		byte[] content = null;
 		String descriptor = "";
 		Map<String,byte[]> tns = new HashMap<String,byte[]>();	
-		InputStream is = csa.readFile(tempFileName);
+		InputStream is = ga.readFile(tempFileName);
 		ZipInputStream zis = new ZipInputStream(is);
 		ZipEntry entry;
 		while((entry = zis.getNextEntry()) != null) {
@@ -159,25 +157,23 @@ public class MokapBackend extends HttpServlet {
 						ent.setProperty(key, entMap.get(key));
 					}		    
 					// Store the entity (GDS) and get the Id
-					Key k = datastore.put(ent);
+					Key k = ga.storeEntity(ent);
 					assignedKeyId = k.getId();
 					
 					// Store the contents file with the Id in the name
 					ByteArrayInputStream bis = new ByteArrayInputStream(content);
-					csa.storeFile(bis, assignedKeyId+".zip");
+					ga.storeFile(bis, assignedKeyId+".zip");
 					
 					// Store the thumbnails in a folder with the id as the name
 					for(String key : tns.keySet()){
 						ByteArrayInputStream imgs = new ByteArrayInputStream(tns.get(key)); 
-						csa.storeFile(imgs, assignedKeyId+"/"+key);
+						ga.storeFile(imgs, assignedKeyId+"/"+key);
 					}
 					// Create the Search Index Document			
-					GoogleUtils.addToSearchIndex(ent, k);
-					
-					// TODO Check everything went ok
+					GoogleAccess.addToSearchIndex(ent, k);					
 					
 					// Everything went ok, so we delete the temp file
-					csa.deleteFile(tempFileName);
+					ga.deleteFile(tempFileName);
 			}else{
 				assignedKeyId = 0;
 			}
@@ -224,7 +220,7 @@ public class MokapBackend extends HttpServlet {
 			        	//Calculate fileName
 			        	tempFileName = Utils.generateTempFileName(fileName);			        	
 				        // Actually store the general temporal file		       			        	
-				        csa.storeFile(is, tempFileName);
+				        ga.storeFile(is, tempFileName);
 			        }
 			    }
 				is.close();
