@@ -30,6 +30,7 @@ import com.google.gson.JsonSyntaxException;
 
 import es.eucm.mokap.backend.model.response.SearchResponse;
 import es.eucm.mokap.backend.model.response.InsertResponse;
+import es.eucm.mokap.backend.utils.ApiKeyVerifier;
 import es.eucm.mokap.backend.utils.GoogleAccess;
 import es.eucm.mokap.backend.utils.Utils;
 
@@ -57,7 +58,7 @@ public class MokapBackend extends HttpServlet {
 	
 		try{
 			// Process the upload request and store the file temporarily
-			String tempFileName = storePostedTempFile(req);
+			String tempFileName = storePostedTempFile(req,resp);
 			// If the file was successfully uploaded, let's process it
 			if(tempFileName != null){
 				assignedKeyId = processPostedTempFile(tempFileName);				
@@ -85,21 +86,26 @@ public class MokapBackend extends HttpServlet {
 	 * Processes get requests.	
 	 * -Requires a header called searchstring. It performs an index search with the keyword in that header. 
 	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {		
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {	
+		// Check api key
+		if (!ApiKeyVerifier.checkApiKey(req,resp)){
+			return;
+		}
+		
 		resp.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();				
 		String searchString = "";
 		// Get the search string from the header / parameter
-		String searchStringH = req.getHeader("searchstring");
-		String searchStringP = req.getParameter("searchstring");
+		String searchStringH = req.getHeader("q");
+		String searchStringP = req.getParameter("q");
 		if(searchStringP!=null){
 			searchString = searchStringP;
 		}
 		if(searchStringH!=null){
 			searchString = searchStringH;
 		}
-		String searchCursor = req.getParameter("searchcursor");
+		String searchCursor = req.getParameter("c");
 		
 		SearchResponse gr = ga.searchByString(searchString, searchCursor);
 		String str = new String(Charset.forName("UTF-8").encode(gr.toJsonString()).array());
@@ -196,8 +202,9 @@ public class MokapBackend extends HttpServlet {
 	 * @return
 	 * @throws IOException
 	 */
-	public String storePostedTempFile(HttpServletRequest req) throws IOException {
+	public String storePostedTempFile(HttpServletRequest req, HttpServletResponse response) throws IOException {
 		String tempFileName = null;
+		String apiKey = req.getParameter("k");
 		// Create a new file upload handler
 		ServletFileUpload upload = new ServletFileUpload();
 		// Set overall request size constraint: the default value of -1 indicates that there is no limit.
@@ -213,20 +220,33 @@ public class MokapBackend extends HttpServlet {
 			    FileItemStream item = iter.next();
 				InputStream is = item.openStream();			    
 				if (!item.isFormField()) {			    	
-			    	// Process a file upload
-			        String fileName = item.getName();			        
-			        if (fileName != null)
-			        	fileName= FilenameUtils.getName(fileName);			       		        
-			        else
-			        	throw new IOException("The file name could not be read.");
-			        if(!fileName.endsWith(".zip")){
-			        	throw new IOException("The file was not a .zip file.");				        	
-			        }else{
-			        	//Calculate fileName
-			        	tempFileName = Utils.generateTempFileName(fileName);			        	
-				        // Actually store the general temporal file		       			        	
-				        ga.storeFile(is, tempFileName);
-			        }
+					// If api key is not valid, send 401
+					if (apiKey == null || !ApiKeyVerifier.isValidKey(apiKey)){
+						response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "APi Key not provided or invalid");
+					} else {
+				    	// Process a file upload
+				        String fileName = item.getName();			        
+				        if (fileName != null)
+				        	fileName= FilenameUtils.getName(fileName);			       		        
+				        else
+				        	throw new IOException("The file name could not be read.");
+				        if(!fileName.endsWith(".zip")){
+				        	throw new IOException("The file was not a .zip file.");				        	
+				        }else{
+				        	//Calculate fileName
+				        	tempFileName = Utils.generateTempFileName(fileName);			        	
+					        // Actually store the general temporal file		       			        	
+					        ga.storeFile(is, tempFileName);
+				        }
+					}
+			    } else {
+			    	if (item.getFieldName()!=null && item.getFieldName().equals("k")){
+			    		InputStreamReader reader = new InputStreamReader(is);
+			    		BufferedReader breader = new BufferedReader(reader);
+			    		
+			    		apiKey = breader.readLine();
+			    		breader.close();
+			    	}
 			    }
 				is.close();
 			} //end while
