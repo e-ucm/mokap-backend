@@ -204,7 +204,7 @@ public class MokapBackend extends HttpServlet {
 	 */
 	public String storePostedTempFile(HttpServletRequest req, HttpServletResponse response) throws IOException {
 		String tempFileName = null;
-		String apiKey = null;
+		String apiKey = req.getParameter("k");
 		// Create a new file upload handler
 		ServletFileUpload upload = new ServletFileUpload();
 		// Set overall request size constraint: the default value of -1 indicates that there is no limit.
@@ -223,25 +223,25 @@ public class MokapBackend extends HttpServlet {
 					// If api key is not valid, send 401
 					if (apiKey == null || !ApiKeyVerifier.isValidKey(apiKey)){
 						response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "APi Key not provided or invalid");
+					} else {
+				    	// Process a file upload
+				        String fileName = item.getName();			        
+				        if (fileName != null)
+				        	fileName= FilenameUtils.getName(fileName);			       		        
+				        else
+				        	throw new IOException("The file name could not be read.");
+				        if(!fileName.endsWith(".zip")){
+				        	throw new IOException("The file was not a .zip file.");				        	
+				        }else{
+				        	//Calculate fileName
+				        	tempFileName = Utils.generateTempFileName(fileName);			        	
+					        // Actually store the general temporal file		       			        	
+					        ga.storeFile(is, tempFileName);
+				        }
 					}
-			    	// Process a file upload
-			        String fileName = item.getName();			        
-			        if (fileName != null)
-			        	fileName= FilenameUtils.getName(fileName);			       		        
-			        else
-			        	throw new IOException("The file name could not be read.");
-			        if(!fileName.endsWith(".zip")){
-			        	throw new IOException("The file was not a .zip file.");				        	
-			        }else{
-			        	//Calculate fileName
-			        	tempFileName = Utils.generateTempFileName(fileName);			        	
-				        // Actually store the general temporal file		       			        	
-				        ga.storeFile(is, tempFileName);
-			        }
 			    } else {
 			    	if (item.getFieldName()!=null && item.getFieldName().equals("k")){
-			    		InputStream is2 = item.openStream();
-			    		InputStreamReader reader = new InputStreamReader(is2);
+			    		InputStreamReader reader = new InputStreamReader(is);
 			    		BufferedReader breader = new BufferedReader(reader);
 			    		
 			    		apiKey = breader.readLine();
