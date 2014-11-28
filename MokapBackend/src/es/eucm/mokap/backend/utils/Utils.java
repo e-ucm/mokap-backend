@@ -26,12 +26,12 @@ public class Utils {
 	 * @throws JsonSyntaxException
 	 */
 	@SuppressWarnings("unchecked")
-	public static Map<String, String> jsonToMap(String jsonString)
+	public static Map<String, Object> jsonToMap(String jsonString)
 			throws JsonSyntaxException {
 		// Convert the JSON into a Map
 		Gson gson = new GsonBuilder().create();		
-		Map<String,String> entMap = new HashMap<String,String>();
-		entMap = (HashMap<String,String>) gson.fromJson(jsonString, entMap.getClass() );		
+		Map<String,Object> entMap = new HashMap<String,Object>();
+		entMap = (HashMap<String,Object>) gson.fromJson(jsonString, entMap.getClass() );		
 		
 		return entMap;
 	}
