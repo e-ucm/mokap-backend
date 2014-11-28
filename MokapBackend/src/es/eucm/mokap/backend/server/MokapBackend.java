@@ -91,15 +91,15 @@ public class MokapBackend extends HttpServlet {
 		PrintWriter out = resp.getWriter();				
 		String searchString = "";
 		// Get the search string from the header / parameter
-		String searchStringH = req.getHeader("searchstring");
-		String searchStringP = req.getParameter("searchstring");
+		String searchStringH = req.getHeader("q");
+		String searchStringP = req.getParameter("q");
 		if(searchStringP!=null){
 			searchString = searchStringP;
 		}
 		if(searchStringH!=null){
 			searchString = searchStringH;
 		}
-		String searchCursor = req.getParameter("searchcursor");
+		String searchCursor = req.getParameter("c");
 		
 		SearchResponse gr = ga.searchByString(searchString, searchCursor);
 		String str = new String(Charset.forName("UTF-8").encode(gr.toJsonString()).array());
