@@ -30,6 +30,7 @@ import com.google.gson.JsonSyntaxException;
 
 import es.eucm.mokap.backend.model.response.SearchResponse;
 import es.eucm.mokap.backend.model.response.InsertResponse;
+import es.eucm.mokap.backend.utils.ApiKeyVerifier;
 import es.eucm.mokap.backend.utils.GoogleAccess;
 import es.eucm.mokap.backend.utils.Utils;
 
@@ -57,7 +58,7 @@ public class MokapBackend extends HttpServlet {
 	
 		try{
 			// Process the upload request and store the file temporarily
-			String tempFileName = storePostedTempFile(req);
+			String tempFileName = storePostedTempFile(req,resp);
 			// If the file was successfully uploaded, let's process it
 			if(tempFileName != null){
 				assignedKeyId = processPostedTempFile(tempFileName);				
@@ -85,7 +86,12 @@ public class MokapBackend extends HttpServlet {
 	 * Processes get requests.	
 	 * -Requires a header called searchstring. It performs an index search with the keyword in that header. 
 	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {		
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {	
+		// Check api key
+		if (!ApiKeyVerifier.checkApiKey(req,resp)){
+			return;
+		}
+		
 		resp.setCharacterEncoding("UTF-8");
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();				
@@ -196,8 +202,9 @@ public class MokapBackend extends HttpServlet {
 	 * @return
 	 * @throws IOException
 	 */
-	public String storePostedTempFile(HttpServletRequest req) throws IOException {
+	public String storePostedTempFile(HttpServletRequest req, HttpServletResponse response) throws IOException {
 		String tempFileName = null;
+		String apiKey = null;
 		// Create a new file upload handler
 		ServletFileUpload upload = new ServletFileUpload();
 		// Set overall request size constraint: the default value of -1 indicates that there is no limit.
@@ -213,6 +220,10 @@ public class MokapBackend extends HttpServlet {
 			    FileItemStream item = iter.next();
 				InputStream is = item.openStream();			    
 				if (!item.isFormField()) {			    	
+					// If api key is not valid, send 401
+					if (apiKey == null || !ApiKeyVerifier.isValidKey(apiKey)){
+						response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "APi Key not provided or invalid");
+					}
 			    	// Process a file upload
 			        String fileName = item.getName();			        
 			        if (fileName != null)
@@ -227,6 +238,15 @@ public class MokapBackend extends HttpServlet {
 				        // Actually store the general temporal file		       			        	
 				        ga.storeFile(is, tempFileName);
 			        }
+			    } else {
+			    	if (item.getFieldName()!=null && item.getFieldName().equals("k")){
+			    		InputStream is2 = item.openStream();
+			    		InputStreamReader reader = new InputStreamReader(is2);
+			    		BufferedReader breader = new BufferedReader(reader);
+			    		
+			    		apiKey = breader.readLine();
+			    		breader.close();
+			    	}
 			    }
 				is.close();
 			} //end while
