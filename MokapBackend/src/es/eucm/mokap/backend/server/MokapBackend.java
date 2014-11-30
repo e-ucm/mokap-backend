@@ -108,7 +108,8 @@ public class MokapBackend extends HttpServlet {
 		String searchCursor = req.getParameter("c");
 		
 		SearchResponse gr = ga.searchByString(searchString, searchCursor);
-		String str = new String(Charset.forName("UTF-8").encode(gr.toJsonString()).array());
+		String str = gr.toJsonString();
+		//String str = new String(Charset.forName("UTF-8").encode(gr.toJsonString()).array());
 		
 		out.print(str);
 		out.flush();
@@ -161,7 +162,7 @@ public class MokapBackend extends HttpServlet {
 				content != null
 					){
 					// Analizar json
-					Map<String, String> entMap = Utils.jsonToMap(descriptor);
+					Map<String, Object> entMap = Utils.jsonToMap(descriptor);
 					// Parse the map into an entity
 					Entity ent = new Entity("Resource");			    
 					for(String key :entMap.keySet()){
@@ -191,6 +192,15 @@ public class MokapBackend extends HttpServlet {
 		}catch(Exception e){
 			e.printStackTrace();
 			assignedKeyId = 0;
+			//Force rollback if anything failed
+			try{
+				ga.deleteFile(tempFileName);
+				for(String key : tns.keySet()){
+					ByteArrayInputStream imgs = new ByteArrayInputStream(tns.get(key)); 
+					ga.deleteFile(assignedKeyId+"/"+key);
+				}
+				ga.deleteEntity(assignedKeyId);
+			}catch(Exception ex){}
 		}
 		return assignedKeyId;
 	}

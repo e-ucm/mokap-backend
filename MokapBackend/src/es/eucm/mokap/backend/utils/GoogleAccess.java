@@ -192,7 +192,7 @@ public class GoogleAccess {
 			try{
 			long keyId = Long.parseLong(sd.getOnlyField("entityRef").getText());
 			
-			Map<String, String> ent = getEntityById(keyId);
+			Map<String, Object> ent = getEntityById(keyId);
 			prepareResponseEntity(keyId, ent);
 			
 			gr.addResult(ent);
@@ -213,24 +213,24 @@ public class GoogleAccess {
 	 * @throws IOException
 	 */
 	private void prepareResponseEntity(long keyId,
-			Map<String, String> ent) throws IOException {
+			Map<String, Object> ent) throws IOException {
 		ent.put("entityRef", keyId+"");
 		ent.put("contentsUrl", DOWNLOAD_URL+keyId+".zip");
 		List<String> tnsUrls = getTnsUrls(keyId);			
-		List<String> tnsWidths = new LinkedList<String>();
-		List<String> tnsHeights = new LinkedList<String>();
+		List<Integer> tnsWidths = new LinkedList<Integer>();
+		List<Integer> tnsHeights = new LinkedList<Integer>();
 		for(String tn : tnsUrls){
 			int lastSeparator = tn.lastIndexOf("/")+1;							
 			String end = tn.substring(lastSeparator);			
 			String res = end.split("\\.")[0];			
 			String[] resolutionParams = res.split("x");			
-			tnsWidths.add(resolutionParams[0]);
-			tnsHeights.add(resolutionParams[1]);			
+			tnsWidths.add(Integer.parseInt(resolutionParams[0]));
+			tnsHeights.add(Integer.parseInt(resolutionParams[1]));			
 		}
 		
-		ent.put("thumbnailUrlList", tnsUrls.toString());
-		ent.put("thumbnailWidthList", tnsWidths.toString());
-		ent.put("thumbnailHeightList", tnsHeights.toString());
+		ent.put("thumbnailUrlList", tnsUrls);
+		ent.put("thumbnailWidthList", tnsWidths);
+		ent.put("thumbnailHeightList", tnsHeights);
 		
 	}
 	/**
@@ -257,8 +257,8 @@ public class GoogleAccess {
 	 * @param keyId
 	 * @return
 	 */
-	public Map<String,String> getEntityById(long keyId) {
-		Map<String,String> m = new HashMap<String,String>();
+	public Map<String, Object> getEntityById(long keyId) {
+		Map<String,Object> m = new HashMap<String,Object>();
 		
 		Key k = KeyFactory.createKey("Resource", keyId);
 		Filter keyFilter =
@@ -270,7 +270,7 @@ public class GoogleAccess {
 		if(result != null){
 			Map<String,Object> props = result.getProperties();
 			for(String key : props.keySet())
-				m.put(key, props.get(key).toString());
+				m.put(key, props.get(key));
 		}
 		return m;
 	}
@@ -281,5 +281,13 @@ public class GoogleAccess {
 	 */
 	public Key storeEntity(Entity ent) {
 		return ds.put(ent);
+	}
+	/**
+	 * Deletes an entity from Google Datastore
+	 * @param assignedKeyId
+	 */
+	public void deleteEntity(long keyId) {
+		Key k = KeyFactory.createKey("Resource", keyId);
+		ds.delete(k);		
 	}
 }

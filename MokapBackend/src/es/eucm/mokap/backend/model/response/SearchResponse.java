@@ -12,10 +12,10 @@ public class SearchResponse extends Response {
 	
 	private String message;
 	private String searchCursor;
-	private List<Map<String,String>> results = new LinkedList<Map<String,String>>();
+	private List<Map<String,Object>> results = new LinkedList<Map<String,Object>>();
 	
-	public void addResult(Map<String, String> res){
-		this.results.add(res);
+	public void addResult(Map<String, Object> ent){
+		this.results.add(ent);
 	}
 	
 	public int getCount() {
@@ -24,10 +24,10 @@ public class SearchResponse extends Response {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	public List<Map<String, String>> getResults() {
+	public List<Map<String, Object>> getResults() {
 		return results;
 	}
-	public void setResults(List<Map<String, String>> results) {
+	public void setResults(List<Map<String, Object>> results) {
 		this.results = results;
 	}
 
