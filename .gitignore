@@ -12,6 +12,8 @@ MokapBackend/src/main/webapp/WEB-INF/appengine-generated/
 MokapBackend/src/main/webapp/WEB-INF/deploy/
 MokapBackend/src/main/webapp/WEB-INF/logging.properties
 MokapBackend/src/main/webapp/mokapbackend/
+MokapBackend/war/**
 .idea
 target
 *.iml
+MokapBackend/src/main/java/META-INF/persistence.xml
