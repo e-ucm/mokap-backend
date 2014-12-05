@@ -34,7 +34,7 @@ public class MokapBackendController implements BackendController{
     }
 
     @Override
-    public String processUploadedResource(FileItemStream fis) throws Exception {
+    public String processUploadedResource(FileItemStream fis) throws IOException {
         String tempFileName = storeUploadedTempFile(fis);
         long storedId = processUploadedTempFile(tempFileName);
         InsertResponse ir = new InsertResponse();
@@ -63,9 +63,9 @@ public class MokapBackendController implements BackendController{
      * Stores an uploaded file with a temporal file name.
      * @param fis Stream with the file
      * @return Name of the created temporal file
-     * @throws Exception
+     * @throws IOException
      */
-    private String storeUploadedTempFile(FileItemStream fis) throws Exception{
+    private String storeUploadedTempFile(FileItemStream fis) throws IOException{
         String tempFileName;
         // Let's process the file
         String fileName = fis.getName();
@@ -73,7 +73,7 @@ public class MokapBackendController implements BackendController{
             fileName= FilenameUtils.getName(fileName);
         else
             throw new IOException("The file name could not be read.");
-        if(!fileName.endsWith(".zip")){
+        if(!fileName.toLowerCase().endsWith(".zip")){
             throw new IOException("The file was not a .zip file.");
         }else{
             InputStream is = fis.openStream();
@@ -87,11 +87,13 @@ public class MokapBackendController implements BackendController{
     }
 
     /**
-     * @param tempFileName
-     * @return
-     * @throws IOException
-     * @throws java.io.UnsupportedEncodingException
-     * @throws com.google.gson.JsonSyntaxException
+     * Processes a temp file stored in Cloud Storage:
+     * -It analyzes its contents
+     * -Processes the descriptor.json file and stores the entity in Datastore
+     * -Finally it stores the thumbnails and contents.zip in Cloud Storage
+     * @param tempFileName name of the temp file we are going to process
+     * @return The Datastore Key id for the entity we just created (entityRef in RepoElement)
+     * @throws IOException If the file is not accessible or Cloud Storage is not available
      */
     private long processUploadedTempFile(String tempFileName) throws IOException,
             UnsupportedEncodingException, JsonSyntaxException {
@@ -115,7 +117,7 @@ public class MokapBackendController implements BackendController{
                 }
             }else if(entry.isDirectory()){
                 continue;
-            }else if(filename.endsWith(".png")){
+            }else if(filename.toLowerCase().endsWith(".png")){
                 byte[] img = IOUtils.toByteArray(zis);
                 tns.put(filename, img);
             }

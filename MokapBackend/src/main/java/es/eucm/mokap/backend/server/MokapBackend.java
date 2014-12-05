@@ -49,7 +49,7 @@ public class MokapBackend extends HttpServlet {
 					out.flush();
 					out.close();
 				}else{
-					resp.sendError(HttpServletResponse.SC_UNAUTHORIZED,"A file could not be found inside the request.");
+					resp.sendError(HttpServletResponse.SC_BAD_REQUEST,"A file could not be found inside the request.");
 				}
 			} catch (Exception e) {
 				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"There was an error: "+e.getMessage());
@@ -95,8 +95,9 @@ public class MokapBackend extends HttpServlet {
 
 
 	/**
-	 * Returns THE FIRST file found in the upload request
-	 * @return
+	 * Iterates the whole request in search for a file. When it finds it, it creates a FileItemStream which contains it.
+	 * @param req The request to process
+	 * @return Returns THE FIRST file found in the upload request or null if no file could be found
 	 */
 	private FileItemStream getUploadedFile(HttpServletRequest req) throws IOException, FileUploadException {
 		// Create a new file upload handler
