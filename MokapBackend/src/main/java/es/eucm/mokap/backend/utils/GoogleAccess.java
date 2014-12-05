@@ -59,10 +59,9 @@ public class GoogleAccess {
 	 * Stores a file in Cloud Storage
 	 * @param is InputStream with the file to store
 	 * @param fileName name of the fila in Cloud Storage
-	 * @param bucketName name of the Cloud Storage bucket
 	 * @throws IOException
 	 */
-	public void storeFile(InputStream is, String fileName) throws Exception {
+	public void storeFile(InputStream is, String fileName) throws IOException {
 		
 		GcsFilename filename = new GcsFilename(bucketName, fileName);
 		GcsFileOptions options = GcsFileOptions.getDefaultInstance();
@@ -76,13 +75,11 @@ public class GoogleAccess {
 	/**
 	 * Reads a file from Cloud Storage
 	 * @param fileName Name of the file to read
-	 * @param bucketName Name of the bucket
-	 * @return InputStream of the file
 	 * @throws IOException
 	 */
 	public InputStream readFile(String fileName) throws IOException {
 		GcsFilename filename = new GcsFilename(bucketName, fileName);				
-		GcsInputChannel readChannel = null;
+		GcsInputChannel readChannel;
 		readChannel = gcs.openReadChannel(filename, 0);
 		InputStream bis = new BufferedInputStream(Channels.newInputStream(readChannel));		
 		return bis;

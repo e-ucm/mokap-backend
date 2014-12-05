@@ -17,16 +17,21 @@
     <!-- Any title is fine                         -->
     <!--                                           -->
     <title>Mokap</title>
-    
-   
+    <script type="text/javascript">
+      function get_action(form) {
+          return form.action + document.getElementById("k").value;
+      }
+    </script>
+
   </head>
                                         
   <body>
-		<a href="http://www.mokap.es" >Mokap.es</a>    
+		<a href="http://www.mokap.es" >Mokap.es</a>
+        Api Key: <input type="text" name="k" id="k"/><br/>
 		
-		<form name="myWebForm" action="/backend" method="post" enctype="multipart/form-data">
+		<form id="testForm" name="testForm" action="/backend?k=" method="post" enctype="multipart/form-data" onsubmit="this.action=get_action(this);">
 		
-		Api Key: <input type="text" name="k" id="k"/><br/>
+
 		<input type="file" name="file" />
 		
 		<input type="submit" />

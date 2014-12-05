@@ -41,7 +41,7 @@ public class ApiKeyVerifier {
 	public static boolean checkApiKey (HttpServletRequest request, HttpServletResponse resp) throws IOException{
 		String apiKey = request.getParameter("k");
 		if (apiKey==null || !isValidKey(apiKey)){
-			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "API Key was missing or not valid");
+			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "API Key was missing or not valid: "+apiKey);
 			return false;
 		}
 		return true;
