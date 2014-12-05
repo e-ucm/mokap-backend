@@ -1,7 +1,9 @@
 package es.eucm.mokap.backend.server;
 
-import es.eucm.mokap.backend.controller.BackendController;
-import es.eucm.mokap.backend.controller.MokapBackendController;
+import es.eucm.mokap.backend.controller.search.SearchController;
+import es.eucm.mokap.backend.controller.search.MokapSearchController;
+import es.eucm.mokap.backend.controller.insert.InsertController;
+import es.eucm.mokap.backend.controller.insert.MokapInsertController;
 import es.eucm.mokap.backend.utils.ApiKeyVerifier;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -19,7 +21,8 @@ import java.io.PrintWriter;
  */
 public class MokapBackend extends HttpServlet {
 	private static final long serialVersionUID = -1883047452996950111L;
-	private static BackendController controller = new MokapBackendController();
+	private SearchController sCont;
+	private InsertController iCont;
 	
 	/**
 	 * Method: POST
@@ -32,6 +35,7 @@ public class MokapBackend extends HttpServlet {
 	 * 	-descriptor.json -> A .json file with the indexing information to store in Datastore
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		this.iCont = new MokapInsertController();
 		// Check api key
 		if (!ApiKeyVerifier.checkApiKey(req,resp)){
 			return;
@@ -42,7 +46,7 @@ public class MokapBackend extends HttpServlet {
 				FileItemStream fis = getUploadedFile(req);
 				if(fis!=null){
 					// Actually process the uploaded resource
-					String str = controller.processUploadedResource(fis);
+					String str = iCont.processUploadedResource(fis);
 					// Send the response
 					PrintWriter out = resp.getWriter();
 					out.print(str);
@@ -64,6 +68,7 @@ public class MokapBackend extends HttpServlet {
 	 * -Requires a valid api key to work.
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {	
+		this.sCont = new MokapSearchController();
 		// Check api key
 		if (!ApiKeyVerifier.checkApiKey(req,resp)){
 			return;
@@ -81,7 +86,7 @@ public class MokapBackend extends HttpServlet {
 			}
 			String searchCursor = req.getParameter("c");
 
-			String str = controller.searchByString(searchString,searchCursor);
+			String str = sCont.searchByString(searchString,searchCursor);
 			// Set the response encoding
 			resp.setCharacterEncoding("UTF-8");
 			resp.setContentType("application/json");
