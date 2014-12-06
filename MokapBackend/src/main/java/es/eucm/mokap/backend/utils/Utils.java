@@ -8,6 +8,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+/**
+ * Class with some useful static methods.
+ */
 public class Utils {
 	/**
 	 * Generates a pseudo-random file name from a given file name

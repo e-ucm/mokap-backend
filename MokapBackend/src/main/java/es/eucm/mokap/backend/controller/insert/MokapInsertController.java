@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Created by mario on 05/12/2014.
+ * Controller class to manage the insertion petitions to the service
  */
 public class MokapInsertController extends BackendController implements InsertController{
     /**

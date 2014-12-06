@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Created by mario on 05/12/2014.
+ * This interface offers some methods to allow the service to interact with a database
  */
 public interface DatabaseInterface {
 

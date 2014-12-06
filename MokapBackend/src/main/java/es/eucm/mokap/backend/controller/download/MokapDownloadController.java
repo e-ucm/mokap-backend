@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Created by mario on 05/12/2014.
+ * Controller class to manage the download petitions to the service
  */
 public class MokapDownloadController extends BackendController implements DownloadController{
     /**

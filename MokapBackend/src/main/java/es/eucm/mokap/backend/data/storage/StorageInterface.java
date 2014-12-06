@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * Created by mario on 05/12/2014.
+ * This interface offers some methods to allow the service to interact with the storage
  */
 public interface StorageInterface {
     /**

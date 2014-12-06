@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Servlet class for the Repository main functions
+ * Servlet class for the Repository main functions (insert, search...)
  */
 public class MokapBackend extends HttpServlet {
 	private static final long serialVersionUID = -1883047452996950111L;

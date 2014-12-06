@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 
-
+/**
+ * Class that represents the response to a search request. It should contain all the necessary data to access the results,
+ * resume the search with a cursor and know if the request was successful.
+ */
 public class SearchResponse extends Response {
 	private long total;
 	

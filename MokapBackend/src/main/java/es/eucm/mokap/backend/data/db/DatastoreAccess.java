@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by mario on 05/12/2014.
+ * This class manages all the interaction between the service and Google Datastore
  */
 public class DatastoreAccess implements DatabaseInterface {
 

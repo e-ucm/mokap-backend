@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by mario on 05/12/2014.
+ * Class that offers interaction with Google Cloud Storage
  */
 public class CloudStorageAccess implements StorageInterface {
     private static GcsService gcs = GcsServiceFactory.createGcsService();
