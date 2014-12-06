@@ -7,7 +7,6 @@ import java.util.Map;
 
 
 public class SearchResponse extends Response {
-	private int count;
 	private long total;
 	
 	private String message;
@@ -19,10 +18,7 @@ public class SearchResponse extends Response {
 	}
 	
 	public int getCount() {
-		return count;
-	}
-	public void setCount(int count) {
-		this.count = count;
+		return results.size();
 	}
 	public List<Map<String, Object>> getResults() {
 		return results;

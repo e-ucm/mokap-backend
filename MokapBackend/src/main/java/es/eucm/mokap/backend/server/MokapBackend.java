@@ -21,8 +21,8 @@ import java.io.PrintWriter;
  */
 public class MokapBackend extends HttpServlet {
 	private static final long serialVersionUID = -1883047452996950111L;
-	private SearchController sCont;
-	private InsertController iCont;
+	private MokapSearchController sCont;
+	private MokapInsertController iCont;
 	
 	/**
 	 * Method: POST

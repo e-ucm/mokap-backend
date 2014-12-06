@@ -15,6 +15,12 @@ public class CloudStorageAccess implements StorageInterface {
     private static GcsService gcs = GcsServiceFactory.createGcsService();
     private String bucketName;
     private String downloadUrl;
+
+    /**
+     * Constructor, takes the bucketname and the base url used for the downloads
+     * @param bucketName
+     * @param downloadUrl
+     */
     public CloudStorageAccess(String bucketName, String downloadUrl) {
         this.bucketName = bucketName;
         this.downloadUrl=downloadUrl;

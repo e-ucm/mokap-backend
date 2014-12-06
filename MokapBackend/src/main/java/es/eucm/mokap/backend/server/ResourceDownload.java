@@ -12,7 +12,7 @@ public class ResourceDownload extends HttpServlet {
 
 	private static final long serialVersionUID = 5191318392003026466L;
 	//private static BackendController controller = new MokapBackendController();
-	private DownloadController dCont;
+	private MokapDownloadController dCont;
 	
 	/**
 	 * Method: GET

@@ -11,18 +11,26 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by mario on 03/12/2014.
+ * Specific controller class for the resource search service.
  */
 public class MokapSearchController extends BackendController implements SearchController {
 
-
+    /**
+     * Performs a Datastore simple search given a string with the search terms. The search returns up to 20 results for that search.
+     * If there are more results to be retrieved, it also returns a cursor string (https://cloud.google.com/appengine/docs/java/datastore/queries?hl=Java_Query_cursors#Java_Query_cursors)
+     * to allow the client to continue iterating the search results. If searchCursor is empty, the method will assume it's a first query.
+     * The results and cursor string are embedded into a JSON String of the type es.eucm.mokap.model.response.SearchResponse.
+     * @param searchString Terms to search for
+     * @param searchCursor WebSafeString for resuming a search
+     * @throws java.io.IOException When the search can't access Datastore or the Search Index for some reason
+     * @return JSON String of the type es.eucm.mokap.model.response.SearchResponse
+     */
     @Override
     public String searchByString(String searchString, String searchCursor) throws IOException {
         SearchResponse gr = new SearchResponse();
         Results<ScoredDocument> results = db.searchByString(searchString, searchCursor);
         if(results.getCursor()!=null)
             gr.setSearchCursor(results.getCursor().toWebSafeString());
-        gr.setCount(results.getNumberReturned());
         gr.setTotal(results.getNumberFound());
 
         // Iterate the results and find the corresponding entities
@@ -36,26 +44,22 @@ public class MokapSearchController extends BackendController implements SearchCo
 
     /**
      * Fills a SearchResponse with a set of search results
+     * In case of error in the addition of one entity, we just skip it and substract one from the total
+     * so it's coherent.
      * @param gr SearchResponse object we need to fill
      * @param results List of results we're processing
      */
     private void fillResults(SearchResponse gr, Results<ScoredDocument> results) {
         for(ScoredDocument sd : results){
-            String debug = "";
             try{
                 long keyId = Long.parseLong(sd.getOnlyField("entityRef").getText());
-
                 Map<String, Object> ent = db.getEntityByIdAsMap(keyId);
                 prepareResponseEntity(keyId, ent);
 
                 gr.addResult(ent);
             }catch(Exception e){
-                if(gr.getCount()>0)
-                    gr.setCount(gr.getCount()-1);
-                if(gr.getTotal()>0)
-                    gr.setTotal(gr.getTotal()-1);
+                gr.setTotal(gr.getTotal() - 1);
                 e.printStackTrace();
-                gr.setMessage("ERROR: "+debug);
             }
         }
     }
