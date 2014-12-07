@@ -1,12 +1,10 @@
-package es.eucm.mokap.backend.controller;
+package es.eucm.mokap.backend.controller.insert;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonSyntaxException;
-import com.google.gwt.thirdparty.guava.common.io.ByteStreams;
+import es.eucm.mokap.backend.controller.BackendController;
 import es.eucm.mokap.backend.model.response.InsertResponse;
-import es.eucm.mokap.backend.model.response.SearchResponse;
-import es.eucm.mokap.backend.utils.GoogleAccess;
 import es.eucm.mokap.backend.utils.Utils;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.io.FilenameUtils;
@@ -19,20 +17,19 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Created by mario on 03/12/2014.
+ * Controller class to manage the insertion petitions to the service
  */
-public class MokapBackendController implements BackendController{
-    private static String BUCKET_NAME = System.getProperty("backend.BUCKET_NAME");
-    private static int MAX_FILE_SIZE = Integer.parseInt(System.getProperty("backend.MAX_FILE_SIZE"));
-    private static GoogleAccess ga = new GoogleAccess(BUCKET_NAME);
-
-    @Override
-    public String searchByString(String searchString, String searchCursor) throws IOException {
-        SearchResponse gr = ga.searchByString(searchString, searchCursor);
-        String str = gr.toJsonString();
-        return str;
-    }
-
+public class MokapInsertController extends BackendController implements InsertController{
+    /**
+     * Processes an uploaded file:
+     * -It temporarily stores the file in Google Cloud Storage
+     * -Then it analyzes its contents
+     * -Processes the descriptor.json file and stores the entity in Datastore
+     * -Finally it stores the thumbnails and contents.zip in Cloud Storage
+     * @param fis FileItemStream containing the file uploaded by the client
+     * @throws java.io.IOException When Cloud Storage is unavailable
+     * @return Returns a JSON string of the type es.eucm.mokap.model.response.InsertResponse, containing all the RepoElement information and the reference to the entity in Datastore
+     */
     @Override
     public String processUploadedResource(FileItemStream fis) throws IOException {
         String tempFileName = storeUploadedTempFile(fis);
@@ -41,22 +38,6 @@ public class MokapBackendController implements BackendController{
         ir.setId(storedId);
         ir.setMessage("OK");
         return ir.toJsonString();
-    }
-
-    @Override
-    public void launchFileDownload(String fileName, OutputStream outputStream) throws IOException {
-        InputStream bis = null;
-        OutputStream bos = null;
-
-        //Read the file
-        bis = ga.readFile(fileName);
-        //Output the file
-        bos = new BufferedOutputStream(outputStream);
-
-        ByteStreams.copy(bis, bos);
-        bos.flush();
-        bis.close();
-        bos.close();
     }
 
     /**
@@ -80,7 +61,7 @@ public class MokapBackendController implements BackendController{
             //Calculate fileName
             tempFileName = Utils.generateTempFileName(fileName);
             // Actually store the general temporal file
-            ga.storeFile(is, tempFileName);
+            st.storeFile(is, tempFileName);
             is.close();
         }
         return tempFileName;
@@ -96,13 +77,13 @@ public class MokapBackendController implements BackendController{
      * @throws IOException If the file is not accessible or Cloud Storage is not available
      */
     private long processUploadedTempFile(String tempFileName) throws IOException,
-            UnsupportedEncodingException, JsonSyntaxException {
+            JsonSyntaxException {
         long assignedKeyId;
         // Read the cloud storage file
         byte[] content = null;
         String descriptor = "";
         Map<String,byte[]> tns = new HashMap<String,byte[]>();
-        InputStream is = ga.readFile(tempFileName);
+        InputStream is = st.readFile(tempFileName);
         ZipInputStream zis = new ZipInputStream(is);
         ZipEntry entry;
         while((entry = zis.getNextEntry()) != null) {
@@ -137,23 +118,23 @@ public class MokapBackendController implements BackendController{
                     ent.setProperty(key, entMap.get(key));
                 }
                 // Store the entity (GDS) and get the Id
-                Key k = ga.storeEntity(ent);
+                Key k = db.storeEntity(ent);
                 assignedKeyId = k.getId();
 
                 // Store the contents file with the Id in the name
                 ByteArrayInputStream bis = new ByteArrayInputStream(content);
-                ga.storeFile(bis, assignedKeyId+".zip");
+                st.storeFile(bis, assignedKeyId+".zip");
 
                 // Store the thumbnails in a folder with the id as the name
                 for(String key : tns.keySet()){
                     ByteArrayInputStream imgs = new ByteArrayInputStream(tns.get(key));
-                    ga.storeFile(imgs, assignedKeyId+"/"+key);
+                    st.storeFile(imgs, assignedKeyId+"/"+key);
                 }
                 // Create the Search Index Document
-                GoogleAccess.addToSearchIndex(ent, k);
+                db.addToSearchIndex(ent, k);
 
                 // Everything went ok, so we delete the temp file
-                ga.deleteFile(tempFileName);
+                st.deleteFile(tempFileName);
             }else{
                 assignedKeyId = 0;
             }
@@ -162,12 +143,12 @@ public class MokapBackendController implements BackendController{
             assignedKeyId = 0;
             //Force rollback if anything failed
             try{
-                ga.deleteFile(tempFileName);
+                st.deleteFile(tempFileName);
                 for(String key : tns.keySet()){
                     ByteArrayInputStream imgs = new ByteArrayInputStream(tns.get(key));
-                    ga.deleteFile(assignedKeyId+"/"+key);
+                    st.deleteFile(assignedKeyId+"/"+key);
                 }
-                ga.deleteEntity(assignedKeyId);
+                db.deleteEntity(assignedKeyId);
             }catch(Exception ex){}
         }
         return assignedKeyId;

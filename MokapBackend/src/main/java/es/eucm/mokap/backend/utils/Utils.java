@@ -8,10 +8,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+/**
+ * Class with some useful static methods.
+ */
 public class Utils {
 	/**
 	 * Generates a pseudo-random file name from a given file name
-	 * @return
+	 * @return The temp new file name
 	 */
 	public static String generateTempFileName(String fileName){
 		long timestamp = new Date().getTime();
@@ -21,9 +24,9 @@ public class Utils {
 	}
 	/**
 	 * Converts a Json String into a Map<String,String>
-	 * @param jsonString
-	 * @return
-	 * @throws JsonSyntaxException
+	 * @param jsonString Stirng that contains the Json to convert
+	 * @return HashMap with the processed Json's data
+	 * @throws JsonSyntaxException If the JSON is malformed
 	 */
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> jsonToMap(String jsonString)

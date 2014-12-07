@@ -1,5 +1,9 @@
 package es.eucm.mokap.backend.model.response;
 
+/**
+ * Class that represents a response to an insert petition. It should contain the necessary data to know if the insertion
+ * went as expected and a reference to the object created in online storage.
+ */
 public class InsertResponse extends Response{
 
 	private long id;
