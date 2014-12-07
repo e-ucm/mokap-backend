@@ -1,10 +1,6 @@
 package es.eucm.mokap.backend.controller.search;
 
-import org.apache.commons.fileupload.FileItemStream;
-
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Created by mario on 03/12/2014.

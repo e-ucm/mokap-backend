@@ -4,7 +4,6 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
-import es.eucm.mokap.backend.model.response.SearchResponse;
 
 import java.io.IOException;
 import java.util.Map;
