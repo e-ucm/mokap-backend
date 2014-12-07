@@ -1,8 +1,6 @@
 package es.eucm.mokap.backend.server;
 
-import es.eucm.mokap.backend.controller.search.SearchController;
 import es.eucm.mokap.backend.controller.search.MokapSearchController;
-import es.eucm.mokap.backend.controller.insert.InsertController;
 import es.eucm.mokap.backend.controller.insert.MokapInsertController;
 import es.eucm.mokap.backend.utils.ApiKeyVerifier;
 import org.apache.commons.fileupload.FileItemIterator;
