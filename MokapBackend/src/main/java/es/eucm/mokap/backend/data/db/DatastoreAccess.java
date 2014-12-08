@@ -5,6 +5,8 @@ import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.*;
 import com.google.appengine.api.search.Index;
 
+import es.eucm.ead.schemax.repo.RepoElementFields;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,7 +119,7 @@ public class DatastoreAccess implements DatabaseInterface {
         for(String key : m.keySet()){
             b.addField(Field.newBuilder().setName(key).setText(m.get(key).toString()));
         }
-        b.addField(Field.newBuilder().setName("entityRef").setText(k.getId()+""));
+        b.addField(Field.newBuilder().setName(RepoElementFields.ENTITYREF).setText(k.getId()+""));
         Document newDoc = b.build();
         //Add the Document instance to the Search Index
         IndexSpec indexSpec = IndexSpec.newBuilder().setName("Resource").build();
