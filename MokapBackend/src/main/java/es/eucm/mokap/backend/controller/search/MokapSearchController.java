@@ -5,11 +5,8 @@ import com.google.appengine.api.search.ScoredDocument;
 
 import es.eucm.ead.schemax.repo.RepoElementFields;
 import es.eucm.mokap.backend.controller.BackendController;
-<<<<<<< HEAD
 import es.eucm.mokap.backend.model.SearchFilters;
-=======
 import es.eucm.mokap.backend.controller.insert.UploadZipStructure;
->>>>>>> 458ffc5963399b701ca5dcf8c1611acbc4f70906
 import es.eucm.mokap.backend.model.response.SearchResponse;
 
 import java.io.*;
