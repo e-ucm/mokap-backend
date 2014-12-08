@@ -5,6 +5,7 @@ import com.google.appengine.api.search.ScoredDocument;
 
 import es.eucm.ead.schemax.repo.RepoElementFields;
 import es.eucm.mokap.backend.controller.BackendController;
+import es.eucm.mokap.backend.controller.insert.UploadZipStructure;
 import es.eucm.mokap.backend.model.response.SearchResponse;
 
 import java.io.*;
@@ -77,7 +78,7 @@ public class MokapSearchController extends BackendController implements SearchCo
     private void prepareResponseEntity(long keyId,
                                        Map<String, Object> ent) throws IOException {
     	ent.put(RepoElementFields.ENTITYREF, keyId+"");
-        ent.put(RepoElementFields.CONTENTSURL, DOWNLOAD_URL+keyId+".zip");
+        ent.put(RepoElementFields.CONTENTSURL, DOWNLOAD_URL+keyId+UploadZipStructure.ZIP_EXTENSION);
         List<String> tnsUrls = st.getTnsUrls(DOWNLOAD_URL, keyId);
         List<Integer> tnsWidths = new LinkedList<Integer>();
         List<Integer> tnsHeights = new LinkedList<Integer>();

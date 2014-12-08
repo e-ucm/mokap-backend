@@ -132,7 +132,7 @@ public class MokapInsertController extends BackendController implements InsertCo
 
                 // Store the contents file with the Id in the name
                 ByteArrayInputStream bis = new ByteArrayInputStream(content);
-                st.storeFile(bis, assignedKeyId+".zip");
+                st.storeFile(bis, assignedKeyId+UploadZipStructure.ZIP_EXTENSION);
 
                 // Store the thumbnails in a folder with the id as the name
                 for(String key : tns.keySet()){
