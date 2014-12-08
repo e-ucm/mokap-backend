@@ -2,6 +2,8 @@ package es.eucm.mokap.backend.controller.search;
 
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
+
+import es.eucm.ead.schemax.repo.RepoElementFields;
 import es.eucm.mokap.backend.controller.BackendController;
 import es.eucm.mokap.backend.model.response.SearchResponse;
 
@@ -52,7 +54,7 @@ public class MokapSearchController extends BackendController implements SearchCo
     private void fillResults(SearchResponse gr, Results<ScoredDocument> results) {
         for(ScoredDocument sd : results){
             try{
-                long keyId = Long.parseLong(sd.getOnlyField("entityRef").getText());
+                long keyId = Long.parseLong(sd.getOnlyField(RepoElementFields.ENTITYREF).getText());
                 Map<String, Object> ent = db.getEntityByIdAsMap(keyId);
                 prepareResponseEntity(keyId, ent);
 
@@ -74,8 +76,8 @@ public class MokapSearchController extends BackendController implements SearchCo
      */
     private void prepareResponseEntity(long keyId,
                                        Map<String, Object> ent) throws IOException {
-        ent.put("entityRef", keyId+"");
-        ent.put("contentsUrl", DOWNLOAD_URL+keyId+".zip");
+    	ent.put(RepoElementFields.ENTITYREF, keyId+"");
+        ent.put(RepoElementFields.CONTENTSURL, DOWNLOAD_URL+keyId+".zip");
         List<String> tnsUrls = st.getTnsUrls(DOWNLOAD_URL, keyId);
         List<Integer> tnsWidths = new LinkedList<Integer>();
         List<Integer> tnsHeights = new LinkedList<Integer>();
@@ -88,8 +90,8 @@ public class MokapSearchController extends BackendController implements SearchCo
             tnsHeights.add(Integer.parseInt(resolutionParams[1]));
         }
 
-        ent.put("thumbnailUrlList", tnsUrls);
-        ent.put("thumbnailWidthList", tnsWidths);
-        ent.put("thumbnailHeightList", tnsHeights);
+        ent.put(RepoElementFields.THUMBNAILURLLIST, tnsUrls);
+        ent.put(RepoElementFields.THUMBNAILWIDTHLIST, tnsWidths);
+        ent.put(RepoElementFields.THUMBNAILHEIGHTLIST, tnsHeights);
     }
 }
