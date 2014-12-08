@@ -50,10 +50,10 @@ public class MokapBackend extends HttpServlet {
 					out.flush();
 					out.close();
 				}else{
-					resp.sendError(HttpServletResponse.SC_BAD_REQUEST,"A file could not be found inside the request.");
+					resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ServerReturnMessages.INVALID_UPLOAD_FILENOTFOUND);
 				}
 			} catch (Exception e) {
-				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"There was an error: "+e.getMessage());
+				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,ServerReturnMessages.m(ServerReturnMessages.GENERIC_INTERNAL_ERROR, e.getMessage()));
 			}
 		}
 	}

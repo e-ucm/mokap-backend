@@ -2,10 +2,13 @@ package es.eucm.mokap.backend.controller.insert;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
-import com.google.gson.JsonSyntaxException;
+
 import es.eucm.mokap.backend.controller.BackendController;
 import es.eucm.mokap.backend.model.response.InsertResponse;
+import es.eucm.mokap.backend.server.ServerError;
+import es.eucm.mokap.backend.server.ServerReturnMessages;
 import es.eucm.mokap.backend.utils.Utils;
+
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +23,8 @@ import java.util.zip.ZipInputStream;
  * Controller class to manage the insertion petitions to the service
  */
 public class MokapInsertController extends BackendController implements InsertController{
+	
+
     /**
      * Processes an uploaded file:
      * -It temporarily stores the file in Google Cloud Storage
@@ -36,7 +41,7 @@ public class MokapInsertController extends BackendController implements InsertCo
         long storedId = processUploadedTempFile(tempFileName);
         InsertResponse ir = new InsertResponse();
         ir.setId(storedId);
-        ir.setMessage("OK");
+        ir.setMessage(ServerReturnMessages.OK);
         return ir.toJsonString();
     }
 
@@ -44,18 +49,20 @@ public class MokapInsertController extends BackendController implements InsertCo
      * Stores an uploaded file with a temporal file name.
      * @param fis Stream with the file
      * @return Name of the created temporal file
-     * @throws IOException
+     * @throws IOException if the file name is null, or if it has no zip extension
      */
     private String storeUploadedTempFile(FileItemStream fis) throws IOException{
         String tempFileName;
         // Let's process the file
         String fileName = fis.getName();
-        if (fileName != null)
+        if (fileName != null){
             fileName= FilenameUtils.getName(fileName);
-        else
-            throw new IOException("The file name could not be read.");
-        if(!fileName.toLowerCase().endsWith(".zip")){
-            throw new IOException("The file was not a .zip file.");
+        } else{
+            throw new IOException(ServerReturnMessages.INVALID_UPLOAD_FILENAMEISNULL);
+        } 
+        
+        if(!fileName.toLowerCase().endsWith(UploadZipStructure.ZIP_EXTENSION)){
+            throw new IOException(ServerReturnMessages.INVALID_UPLOAD_EXTENSION);
         }else{
             InputStream is = fis.openStream();
             //Calculate fileName
@@ -75,9 +82,9 @@ public class MokapInsertController extends BackendController implements InsertCo
      * @param tempFileName name of the temp file we are going to process
      * @return The Datastore Key id for the entity we just created (entityRef in RepoElement)
      * @throws IOException If the file is not accessible or Cloud Storage is not available
+     * 		   ServerError If a problem is found with the internal structure of the file
      */
-    private long processUploadedTempFile(String tempFileName) throws IOException,
-            JsonSyntaxException {
+    private long processUploadedTempFile(String tempFileName) throws IOException, ServerError {
         long assignedKeyId;
         // Read the cloud storage file
         byte[] content = null;
@@ -88,9 +95,9 @@ public class MokapInsertController extends BackendController implements InsertCo
         ZipEntry entry;
         while((entry = zis.getNextEntry()) != null) {
             String filename = entry.getName();
-            if(filename.equals("contents.zip")){
+            if(UploadZipStructure.isContentsFile(filename)){
                 content = IOUtils.toByteArray(zis);
-            }else if(filename.equals("descriptor.json")){
+            }else if(UploadZipStructure.isDescriptorFile(filename)){
                 BufferedReader br = new BufferedReader(new InputStreamReader(zis, "UTF-8"));
                 String str;
                 while ((str = br.readLine()) != null) {
@@ -98,7 +105,9 @@ public class MokapInsertController extends BackendController implements InsertCo
                 }
             }else if(entry.isDirectory()){
                 continue;
-            }else if(filename.toLowerCase().endsWith(".png")){
+            }
+            // Should be a thumbnail
+            else if (UploadZipStructure.checkThumbnailImage(filename)){
                 byte[] img = IOUtils.toByteArray(zis);
                 tns.put(filename, img);
             }
@@ -123,7 +132,7 @@ public class MokapInsertController extends BackendController implements InsertCo
 
                 // Store the contents file with the Id in the name
                 ByteArrayInputStream bis = new ByteArrayInputStream(content);
-                st.storeFile(bis, assignedKeyId+".zip");
+                st.storeFile(bis, assignedKeyId+UploadZipStructure.ZIP_EXTENSION);
 
                 // Store the thumbnails in a folder with the id as the name
                 for(String key : tns.keySet()){
@@ -137,6 +146,12 @@ public class MokapInsertController extends BackendController implements InsertCo
                 st.deleteFile(tempFileName);
             }else{
                 assignedKeyId = 0;
+                if (descriptor==null || descriptor.equals("")){
+                	throw new ServerError(ServerReturnMessages.INVALID_UPLOAD_DESCRIPTOR);	
+                } else {
+                	throw new ServerError(ServerReturnMessages.INVALID_UPLOAD_CONTENT);
+                }
+                
             }
         }catch(Exception e){
             e.printStackTrace();

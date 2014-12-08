@@ -3,6 +3,8 @@ package es.eucm.mokap.backend.data.storage;
 import com.google.appengine.tools.cloudstorage.*;
 import com.google.gwt.thirdparty.guava.common.io.ByteStreams;
 
+import es.eucm.mokap.backend.controller.insert.UploadZipStructure;
+
 import java.io.*;
 import java.nio.channels.Channels;
 import java.util.LinkedList;
@@ -35,7 +37,7 @@ public class CloudStorageAccess implements StorageInterface {
     public List<String> getTnsUrls(String baseUrl,long keyId) throws IOException {
         List<String> urls = new LinkedList<String>();
 
-        ListResult list = gcs.list(bucketName, new ListOptions.Builder().setPrefix(keyId+"/thumbnails/").setRecursive(true).build());
+        ListResult list = gcs.list(bucketName, new ListOptions.Builder().setPrefix("/"+keyId+UploadZipStructure.THUMBNAILS_FOLDER).setRecursive(true).build());
 
         while(list.hasNext())
         {
