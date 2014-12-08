@@ -7,6 +7,9 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.eucm.mokap.backend.server.ServerError;
+import es.eucm.mokap.backend.server.ServerReturnMessages;
+
 /**
  * Simple tool used to verify if a given API Key belongs to a registered application
  * @author jtorrente
@@ -25,7 +28,7 @@ public class ApiKeyVerifier {
 				properties.load(new FileInputStream(VALID_KEYS_FILE));
 			} catch (IOException e) {
 				properties = null;
-				throw new RuntimeException("An error occurred while loading the supported keys");
+				throw new ServerError(ServerReturnMessages.INTERNAL_ERROR_APIKEYSFILE_NOTFOUND);
 			}
 		}
 	}
@@ -41,7 +44,7 @@ public class ApiKeyVerifier {
 	public static boolean checkApiKey (HttpServletRequest request, HttpServletResponse resp) throws IOException{
 		String apiKey = request.getParameter("k");
 		if (apiKey==null || !isValidKey(apiKey)){
-			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "API Key was missing or not valid: "+apiKey);
+			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, ServerReturnMessages.m(ServerReturnMessages.INVALID_APIKEY, apiKey));
 			return false;
 		}
 		return true;

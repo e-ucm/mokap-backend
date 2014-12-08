@@ -30,10 +30,10 @@ public class ResourceDownload extends HttpServlet {
 			try {
 				dCont.launchFileDownload(fileName, resp.getOutputStream());
 			}catch(Exception e){
-				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error processing the file download: "+e.getMessage());
+				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,ServerReturnMessages.m(ServerReturnMessages.INVALID_DOWNLOAD_FILENNOTFOUND, fileName, e.getMessage()));
 			}
 		}else{
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST,"ERROR: \"\"+fileName+\"\\\" is not a valid file name.\"");
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ServerReturnMessages.INVALID_DOWNLOAD_FILENAMENULL);
 		}	
 	}
 
