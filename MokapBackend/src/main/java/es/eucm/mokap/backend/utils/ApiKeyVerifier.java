@@ -53,7 +53,7 @@ public class ApiKeyVerifier {
 	 * @return	True if valid, false otherwise
 	 * @throws RuntimeException if the file where valid api keys are stored cannot be loaded
 	 */
-	public static boolean isValidKey(String key){
+	private static boolean isValidKey(String key){
 		loadValidKeys();
 		return (properties!=null && properties.containsKey(key));
 	}

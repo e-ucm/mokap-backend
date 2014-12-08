@@ -2,6 +2,7 @@ package es.eucm.mokap.backend.server;
 
 import es.eucm.mokap.backend.controller.search.MokapSearchController;
 import es.eucm.mokap.backend.controller.insert.MokapInsertController;
+import es.eucm.mokap.backend.model.SearchFilters;
 import es.eucm.mokap.backend.utils.ApiKeyVerifier;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -19,9 +20,7 @@ import java.io.PrintWriter;
  */
 public class MokapBackend extends HttpServlet {
 	private static final long serialVersionUID = -1883047452996950111L;
-	private MokapSearchController sCont;
-	private MokapInsertController iCont;
-	
+
 	/**
 	 * Method: POST
 	 * Processes post requests. 
@@ -33,7 +32,7 @@ public class MokapBackend extends HttpServlet {
 	 * 	-descriptor.json -> A .json file with the indexing information to store in Datastore
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		this.iCont = new MokapInsertController();
+		MokapInsertController iCont = new MokapInsertController();
 		// Check api key
 		if (!ApiKeyVerifier.checkApiKey(req,resp)){
 			return;
@@ -65,26 +64,18 @@ public class MokapBackend extends HttpServlet {
 	 * -Requires a header/parameter called q (string to search for). It performs an index search with the keyword in that header.
 	 * -Requires a valid api key to work.
 	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {	
-		this.sCont = new MokapSearchController();
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		MokapSearchController sCont = new MokapSearchController();
 		// Check api key
 		if (!ApiKeyVerifier.checkApiKey(req,resp)){
 			return;
 		}else{
 			PrintWriter out = resp.getWriter();
-			String searchString = "";
-			// Get the search string from the header / parameter
-			String searchStringH = req.getHeader("q");
-			String searchStringP = req.getParameter("q");
-			if(searchStringP!=null){
-				searchString = searchStringP;
-			}
-			if(searchStringH!=null){
-				searchString = searchStringH;
-			}
-			String searchCursor = req.getParameter("c");
 
-			String str = sCont.searchByString(searchString,searchCursor);
+			// Get the parameters from the header / parameter
+			SearchFilters sp = new SearchFilters(req);
+
+			String str = sCont.performSearch(sp);
 			// Set the response encoding
 			resp.setCharacterEncoding("UTF-8");
 			resp.setContentType("application/json");
@@ -93,9 +84,6 @@ public class MokapBackend extends HttpServlet {
 			out.close();
 		}
 	}
-	
-
-
 
 	/**
 	 * Iterates the whole request in search for a file. When it finds it, it creates a FileItemStream which contains it.

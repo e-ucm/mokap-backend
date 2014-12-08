@@ -4,6 +4,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.*;
 import com.google.appengine.api.search.Index;
+import es.eucm.mokap.backend.model.SearchFilters;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,35 +18,23 @@ public class DatastoreAccess implements DatabaseInterface {
     private static  DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
     /**
-     * Performs a simple search with no associated cursor. Actually, it calls searchByString(String searchString, String cursorString)
-     * with null in the cursor parameter.
-     * @param searchString String to search for
+     * Search the Datastore applying the filters passed in the SearchFilters object
+     * @param sp Filters and parameters needed for the search
      * @return Results object, similar to a list: https://cloud.google.com/appengine/docs/java/search/results
      * @throws IOException
      */
     @Override
-    public Results<ScoredDocument> searchByString(String searchString) throws IOException {
-        return searchByString(searchString,null);
-    }
-    /**
-     *
-     * @param searchString String to search for
-     * @param cursorString Search Cursor as WebSafeString: https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Cursor
-     * @return Results object, similar to a list: https://cloud.google.com/appengine/docs/java/search/results
-     * @throws IOException
-     */
-    @Override
-    public Results<ScoredDocument> searchByString(String searchString, String cursorString) throws IOException {
+    public Results<ScoredDocument> searchByString(SearchFilters sp) throws IOException {
+        String cursorString = sp.getSearchCursor();
         Cursor cursor;
         if(cursorString != null){
             cursor = Cursor.newBuilder().build(cursorString);
         }else{
             cursor = Cursor.newBuilder().build();
         }
-
         com.google.appengine.api.search.Query query =
                 com.google.appengine.api.search.Query.newBuilder().setOptions(
-                        QueryOptions.newBuilder().setCursor(cursor).build()).build(searchString);
+                        QueryOptions.newBuilder().setCursor(cursor).build()).build(sp.getSearchQuery());
 
         IndexSpec indexSpec = IndexSpec.newBuilder().setName("Resource").build();
         Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
