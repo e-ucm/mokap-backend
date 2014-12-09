@@ -1,5 +1,7 @@
 package es.eucm.mokap.backend.model;
 
+import es.eucm.ead.schemax.repo.RepoElementFields;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,16 +77,16 @@ public class SearchFilters {
     Map<String,String> getActiveFilters(){
         HashMap<String,String> activeFilters = new HashMap<String,String>();
         if(this.categoryIdFilter!=null){
-            activeFilters.put(RepoElementFields.CATEGORY,categoryIdFilter);
+            activeFilters.put(RepoElementFields.CATEGORYLIST,categoryIdFilter);
         }
         if(this.libraryIdFilter!=null){
-            activeFilters.put(RepoElementFields.LIBRARY,libraryIdFilter);
+            activeFilters.put(RepoElementFields.LIBRARYID,libraryIdFilter);
         }
         if(this.publisherFilter!=null){
             activeFilters.put(RepoElementFields.PUBLISHER,publisherFilter);
         }
         if(this.tagFilter!=null){
-            activeFilters.put(RepoElementFields.TAGS,tagFilter);
+            activeFilters.put(RepoElementFields.TAGLIST,tagFilter);
         }
         return activeFilters;
     }
@@ -104,9 +106,17 @@ public class SearchFilters {
         for(String key : activeFilters.keySet()){
             if(i!=0) queryString+=" AND ";
 
-            queryString+=key+" "+activeFilters.get(key);
+            queryString+=key+" = "+activeFilters.get(key);
+            i++;
         }
         return queryString;
+    }
+
+    public String toString(){
+        String str = "Search String: "+this.getSearchString()+ System.lineSeparator() +
+                    "Search Cursor: "+this.getSearchCursor() + System.lineSeparator() +
+                    "Search string: "+this.getSearchQuery();
+        return str;
     }
 
 

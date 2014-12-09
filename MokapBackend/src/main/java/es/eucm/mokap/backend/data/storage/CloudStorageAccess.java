@@ -37,7 +37,7 @@ public class CloudStorageAccess implements StorageInterface {
     public List<String> getTnsUrls(String baseUrl,long keyId) throws IOException {
         List<String> urls = new LinkedList<String>();
 
-        ListResult list = gcs.list(bucketName, new ListOptions.Builder().setPrefix("/"+keyId+UploadZipStructure.THUMBNAILS_FOLDER).setRecursive(true).build());
+        ListResult list = gcs.list(bucketName, new ListOptions.Builder().setPrefix(keyId+"/"+UploadZipStructure.THUMBNAILS_FOLDER).setRecursive(true).build());
 
         while(list.hasNext())
         {

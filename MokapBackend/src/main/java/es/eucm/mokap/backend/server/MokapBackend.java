@@ -74,7 +74,6 @@ public class MokapBackend extends HttpServlet {
 
 			// Get the parameters from the header / parameter
 			SearchFilters sp = new SearchFilters(req);
-
 			String str = sCont.performSearch(sp);
 			// Set the response encoding
 			resp.setCharacterEncoding("UTF-8");

@@ -35,6 +35,7 @@ public class MokapSearchController extends BackendController implements SearchCo
         if(results.getCursor()!=null)
             gr.setSearchCursor(results.getCursor().toWebSafeString());
         gr.setTotal(results.getNumberFound());
+        gr.setSearchString(sp.getSearchString());
 
         // Iterate the results and find the corresponding entities
         fillResults(gr, results);
