@@ -1,8 +1,10 @@
 package es.eucm.mokap.backend.server;
 
+import es.eucm.ead.schemax.repo.SearchRequestFields;
 import es.eucm.mokap.backend.controller.search.MokapSearchController;
 import es.eucm.mokap.backend.controller.insert.MokapInsertController;
 import es.eucm.mokap.backend.utils.ApiKeyVerifier;
+
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -11,6 +13,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -74,15 +77,15 @@ public class MokapBackend extends HttpServlet {
 			PrintWriter out = resp.getWriter();
 			String searchString = "";
 			// Get the search string from the header / parameter
-			String searchStringH = req.getHeader("q");
-			String searchStringP = req.getParameter("q");
+			String searchStringH = req.getHeader(SearchRequestFields.Q);
+			String searchStringP = req.getParameter(SearchRequestFields.Q);
 			if(searchStringP!=null){
 				searchString = searchStringP;
 			}
 			if(searchStringH!=null){
 				searchString = searchStringH;
 			}
-			String searchCursor = req.getParameter("c");
+			String searchCursor = req.getParameter(SearchRequestFields.C);
 
 			String str = sCont.searchByString(searchString,searchCursor);
 			// Set the response encoding
