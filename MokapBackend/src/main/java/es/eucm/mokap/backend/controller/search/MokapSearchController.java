@@ -5,9 +5,9 @@ import com.google.appengine.api.search.ScoredDocument;
 
 import es.eucm.ead.schemax.repo.RepoElementFields;
 import es.eucm.mokap.backend.controller.BackendController;
-import es.eucm.mokap.backend.model.SearchFilters;
 import es.eucm.mokap.backend.controller.insert.UploadZipStructure;
 import es.eucm.mokap.backend.model.response.SearchResponse;
+import es.eucm.mokap.backend.model.search.SearchParams;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -29,13 +29,13 @@ public class MokapSearchController extends BackendController implements SearchCo
      * @return JSON String of the type es.eucm.mokap.model.response.SearchResponse
      */
     @Override
-    public String performSearch(SearchFilters sp) throws IOException {
+    public String performSearch(SearchParams sp) throws IOException {
         SearchResponse gr = new SearchResponse();
         Results<ScoredDocument> results = db.searchByString(sp);
         if(results.getCursor()!=null)
             gr.setSearchCursor(results.getCursor().toWebSafeString());
         gr.setTotal(results.getNumberFound());
-        gr.setSearchString(sp.getSearchString());
+        gr.setSearchString(sp.getSearchQuery());
 
         // Iterate the results and find the corresponding entities
         fillResults(gr, results);

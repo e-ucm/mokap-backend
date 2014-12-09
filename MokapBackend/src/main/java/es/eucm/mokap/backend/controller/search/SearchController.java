@@ -1,6 +1,6 @@
 package es.eucm.mokap.backend.controller.search;
 
-import es.eucm.mokap.backend.model.SearchFilters;
+import es.eucm.mokap.backend.model.search.SearchParams;
 
 import java.io.IOException;
 
@@ -17,5 +17,5 @@ public interface SearchController {
      * @throws java.io.IOException When the search can't access Datastore or the Search Index for some reason
      * @return JSON String of the type es.eucm.mokap.model.response.SearchResponse
      */
-    String performSearch(SearchFilters sp) throws IOException;
+    String performSearch(SearchParams sp) throws IOException;
 }

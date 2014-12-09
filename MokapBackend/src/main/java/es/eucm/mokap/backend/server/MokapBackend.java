@@ -2,7 +2,8 @@ package es.eucm.mokap.backend.server;
 
 import es.eucm.mokap.backend.controller.search.MokapSearchController;
 import es.eucm.mokap.backend.controller.insert.MokapInsertController;
-import es.eucm.mokap.backend.model.SearchFilters;
+import es.eucm.mokap.backend.model.search.SearchParams;
+import es.eucm.mokap.backend.model.search.SearchParamsFactory;
 import es.eucm.mokap.backend.utils.ApiKeyVerifier;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -73,7 +74,7 @@ public class MokapBackend extends HttpServlet {
 			PrintWriter out = resp.getWriter();
 
 			// Get the parameters from the header / parameter
-			SearchFilters sp = new SearchFilters(req);
+			SearchParams sp = SearchParamsFactory.create(req);
 			String str = sCont.performSearch(sp);
 			// Set the response encoding
 			resp.setCharacterEncoding("UTF-8");

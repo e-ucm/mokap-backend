@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
-import es.eucm.mokap.backend.model.SearchFilters;
+import es.eucm.mokap.backend.model.search.SearchParams;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,7 +20,7 @@ public interface DatabaseInterface {
      * @return Results object, similar to a list: https://cloud.google.com/appengine/docs/java/search/results
      * @throws IOException
      */
-    Results<ScoredDocument> searchByString(SearchFilters sp) throws IOException;
+    Results<ScoredDocument> searchByString(SearchParams sp) throws IOException;
 
     /**
      * Stores an entity in Google Datastore.

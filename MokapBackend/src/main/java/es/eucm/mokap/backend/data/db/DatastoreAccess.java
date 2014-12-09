@@ -4,9 +4,9 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.*;
 import com.google.appengine.api.search.Index;
-import es.eucm.mokap.backend.model.SearchFilters;
 
 import es.eucm.ead.schemax.repo.RepoElementFields;
+import es.eucm.mokap.backend.model.search.SearchParams;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class DatastoreAccess implements DatabaseInterface {
      * @throws IOException
      */
     @Override
-    public Results<ScoredDocument> searchByString(SearchFilters sp) throws IOException {
+    public Results<ScoredDocument> searchByString(SearchParams sp) throws IOException {
         String cursorString = sp.getSearchCursor();
         Cursor cursor;
         if(cursorString != null){
