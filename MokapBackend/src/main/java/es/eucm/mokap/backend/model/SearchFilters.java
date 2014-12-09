@@ -38,7 +38,7 @@ public class SearchFilters {
 
     /**
      * Special constructor that parses the request directly, taking the values we need.
-     * @param req
+     * @param req Request we're parsing
      */
     public SearchFilters(HttpServletRequest req){
         this.searchString = getParameterValue("q",req);
