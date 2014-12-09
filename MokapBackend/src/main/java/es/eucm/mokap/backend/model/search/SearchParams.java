@@ -1,7 +1,5 @@
 package es.eucm.mokap.backend.model.search;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Created by mario on 09/12/2014.
  * Parent class for the different search parameter options
