@@ -153,9 +153,100 @@
                     </jvmFlags -->
                 </configuration>
             </plugin>
+            
+            <!-- Java formatter -->
+            <plugin>
+                <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+                <artifactId>maven-java-formatter-plugin</artifactId>
+                <configuration>
+                    <compilerCompliance>1.7</compilerCompliance>
+                    <compilerSource>1.7</compilerSource>
+                    <configFile>resources/eclipse-formatter.xml</configFile>
+                    <lineEnding>KEEP</lineEnding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Check licenses in header -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <basedir>.</basedir>
+                    <header>resources/LICENSE.txt</header>
+                    <strictCheck>true</strictCheck>
+                    <failIfMissing>false</failIfMissing>
+                    <aggregate>true</aggregate>
+                    <excludes>
+                    	<exclude>**/gwt-unitCache/**</exclude>
+                        <!-- readme files -->
+                        <exclude>COPYING</exclude>
+                        <exclude>LICENSES</exclude>
+                        <!-- point-files and (non-folder) root-files -->
+                        <exclude>*.*</exclude>
+                        <exclude>**/.*</exclude>
+                        <!-- binary libraries -->
+                        <exclude>**/*.so</exclude>
+                        <!-- text, xml, string-files -->
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.xml</exclude>
+                        <exclude>**/*.props</exclude>
+                        <exclude>**/*.properties</exclude>
+                        <!-- media, fonts, shaders -->
+                        <exclude>**/*.fnt</exclude>
+                        <exclude>**/*.ttf</exclude>
+                        <exclude>**/*.atlas</exclude>
+                        <exclude>**/*.glsl</exclude>
+                        <exclude>**/*.svg</exclude>
+                        <exclude>**/*.psd</exclude>
+                        <exclude>**/*.ai</exclude>
+                        <!-- android-related: proguard config, R-files -->
+                        <exclude>**/*.cfg</exclude>
+                        <exclude>**/R.java</exclude>
+                        <!-- ios related: vs solution, apple prop-list -->
+                        <exclude>**/*.sln</exclude>
+                        <exclude>**/*.plist</exclude>
+                        <exclude>**/*.csproj</exclude>
+                        <!-- scripts -->
+                        <exclude>**/*.bat</exclude>
+                        <exclude>**/*.sh</exclude>
+                        <exclude>**/*.command</exclude>
+                        <!-- resources and web -->
+                        <exclude>**/resources/**</exclude>
+                        <exclude>**/webapp/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-headers</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>format</goal>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
         </plugins>
         <pluginManagement>
         	<plugins>
+        		<plugin>
+                    <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+                    <artifactId>maven-java-formatter-plugin</artifactId>
+                    <version>0.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
         		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         		<plugin>
         			<groupId>org.eclipse.m2e</groupId>
