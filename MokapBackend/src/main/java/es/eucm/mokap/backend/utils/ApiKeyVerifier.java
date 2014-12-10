@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.eucm.ead.schemax.repo.RepoRequestFields;
 import es.eucm.mokap.backend.server.ServerError;
 import es.eucm.mokap.backend.server.ServerReturnMessages;
 
@@ -42,7 +43,7 @@ public class ApiKeyVerifier {
 	 * @return True if api key was valid, false otherwise
 	 */
 	public static boolean checkApiKey (HttpServletRequest request, HttpServletResponse resp) throws IOException{
-		String apiKey = request.getParameter("k");
+		String apiKey = request.getParameter(RepoRequestFields.K);
 		if (apiKey==null || !isValidKey(apiKey)){
 			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, ServerReturnMessages.m(ServerReturnMessages.INVALID_APIKEY, apiKey));
 			return false;
