@@ -20,8 +20,8 @@ public class CloudStorageAccess implements StorageInterface {
 
     /**
      * Constructor, takes the bucketname and the base url used for the downloads
-     * @param bucketName
-     * @param downloadUrl
+     * @param bucketName Name of the Cloud Storage bucket we're using
+     * @param downloadUrl Base url we'll use to generate the download links
      */
     public CloudStorageAccess(String bucketName, String downloadUrl) {
         this.bucketName = bucketName;
@@ -37,7 +37,7 @@ public class CloudStorageAccess implements StorageInterface {
     public List<String> getTnsUrls(String baseUrl,long keyId) throws IOException {
         List<String> urls = new LinkedList<String>();
 
-        ListResult list = gcs.list(bucketName, new ListOptions.Builder().setPrefix("/"+keyId+UploadZipStructure.THUMBNAILS_FOLDER).setRecursive(true).build());
+        ListResult list = gcs.list(bucketName, new ListOptions.Builder().setPrefix(keyId+"/"+UploadZipStructure.THUMBNAILS_FOLDER).setRecursive(true).build());
 
         while(list.hasNext())
         {

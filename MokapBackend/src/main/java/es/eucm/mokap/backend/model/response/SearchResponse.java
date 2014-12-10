@@ -14,6 +14,7 @@ public class SearchResponse extends Response {
 	
 	private String message;
 	private String searchCursor;
+	private String searchString;
 	private List<Map<String,Object>> results = new LinkedList<Map<String,Object>>();
 	
 	public void addResult(Map<String, Object> ent){
@@ -52,5 +53,13 @@ public class SearchResponse extends Response {
 
 	public void setSearchCursor(String string) {
 		this.searchCursor = string;
+	}
+
+	public String getSearchString() {
+		return searchString;
+	}
+
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
 	}
 }

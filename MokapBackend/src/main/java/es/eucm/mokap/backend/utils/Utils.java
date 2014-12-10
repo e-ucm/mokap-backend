@@ -13,13 +13,14 @@ import com.google.gson.JsonSyntaxException;
  */
 public class Utils {
 	/**
-	 * Generates a pseudo-random file name from a given file name
+	 * Generates a pseudo-random file name from a given file name. It uses the timestamp of the creation of the file name
+	 * and adds a random number and the original file name.
 	 * @return The temp new file name
 	 */
 	public static String generateTempFileName(String fileName){
 		long timestamp = new Date().getTime();
     	double rnd = 1+Math.random()*9999;
-    	String tempFileName = new String(timestamp+rnd+fileName).replace('.', '_');
+    	String tempFileName = (timestamp + rnd + fileName).replace('.', '_');
     	return tempFileName;
 	}
 	/**

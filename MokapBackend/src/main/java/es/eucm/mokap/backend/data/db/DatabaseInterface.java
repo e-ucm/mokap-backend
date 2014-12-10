@@ -4,6 +4,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
+import es.eucm.mokap.backend.model.search.SearchParams;
 
 import java.io.IOException;
 import java.util.Map;
@@ -14,22 +15,12 @@ import java.util.Map;
 public interface DatabaseInterface {
 
     /**
-     * Performs a simple search with no associated cursor. Actually, it calls searchByString(String searchString, String cursorString)
-     * with null in the cursor parameter.
-     * @param searchString String to search for
+     * Search the Datastore applying the filters passed in the Searchfilters object
+     * @param sp Filters and parameters needed for the search
      * @return Results object, similar to a list: https://cloud.google.com/appengine/docs/java/search/results
      * @throws IOException
      */
-    Results<ScoredDocument> searchByString(String searchString) throws IOException;
-
-    /**
-     *
-     * @param searchString String to search for
-     * @param cursorString Search Cursor as WebSafeString: https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Cursor
-     * @return Results object, similar to a list: https://cloud.google.com/appengine/docs/java/search/results
-     * @throws IOException
-     */
-    Results<ScoredDocument> searchByString(String searchString, String cursorString) throws IOException;
+    Results<ScoredDocument> searchByString(SearchParams sp) throws IOException;
 
     /**
      * Stores an entity in Google Datastore.
