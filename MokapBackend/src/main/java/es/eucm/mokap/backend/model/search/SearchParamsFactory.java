@@ -18,10 +18,15 @@ package es.eucm.mokap.backend.model.search;
 
 import javax.servlet.http.HttpServletRequest;
 
+import es.eucm.ead.schemax.repo.RepoRequestFields;
+import es.eucm.ead.schemax.repo.SearchRequestFields;
+
 /**
+ * 
  * Created by mario on 10/12/2014. Factory class for the SearchParams classes
  */
 public class SearchParamsFactory {
+
 	/**
 	 * Creates a SearchParams child object of the type that corresponds to the
 	 * parameters we get in the request
@@ -31,13 +36,17 @@ public class SearchParamsFactory {
 	 * @return SearchParams object
 	 */
 	public static SearchParams create(HttpServletRequest req) {
-		if (getParameterValue("q", req) != null) {
-			return new TextSearchParams(getParameterValue("q", req),
-					getParameterValue("c", req));
+		if (getParameterValue(SearchRequestFields.Q, req) != null) {
+			return new TextSearchParams(getParameterValue(
+					SearchRequestFields.Q, req), getParameterValue(
+					SearchRequestFields.C, req));
 		} else {
-			return new FilteredSearchParams(getParameterValue("p", req),
-					getParameterValue("l", req), getParameterValue("cat", req),
-					getParameterValue("t", req), getParameterValue("c", req));
+			return new FilteredSearchParams(getParameterValue(
+					RepoRequestFields.P, req), getParameterValue(
+					RepoRequestFields.L, req), getParameterValue(
+					RepoRequestFields.CAT, req), getParameterValue(
+					RepoRequestFields.T, req), getParameterValue(
+					SearchRequestFields.C, req));
 		}
 	}
 
