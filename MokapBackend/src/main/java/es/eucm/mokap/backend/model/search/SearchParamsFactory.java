@@ -31,14 +31,10 @@ public class SearchParamsFactory {
 	 * @return SearchParams object
 	 */
 	public static SearchParams create(HttpServletRequest req) {
-		if (getParameterValue("q", req) != null) {
-			return new TextSearchParams(getParameterValue("q", req),
-					getParameterValue("c", req));
-		} else {
-			return new FilteredSearchParams(getParameterValue("p", req),
-					getParameterValue("l", req), getParameterValue("cat", req),
-					getParameterValue("t", req), getParameterValue("c", req));
-		}
+		return new TextSearchParams(getParameterValue("q", req),
+				getParameterValue("p", req), getParameterValue("l", req),
+				getParameterValue("cat", req), getParameterValue("t", req),
+				getParameterValue("c", req));
 	}
 
 	/**
