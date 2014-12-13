@@ -36,18 +36,14 @@ public class SearchParamsFactory {
 	 * @return SearchParams object
 	 */
 	public static SearchParams create(HttpServletRequest req) {
-		if (getParameterValue(SearchRequestFields.Q, req) != null) {
-			return new TextSearchParams(getParameterValue(
-					SearchRequestFields.Q, req), getParameterValue(
-					SearchRequestFields.C, req));
-		} else {
-			return new FilteredSearchParams(getParameterValue(
-					RepoRequestFields.P, req), getParameterValue(
-					RepoRequestFields.L, req), getParameterValue(
-					RepoRequestFields.CAT, req), getParameterValue(
-					RepoRequestFields.T, req), getParameterValue(
-					SearchRequestFields.C, req));
-		}
+
+		return new TextSearchParams(getParameterValue(
+				SearchRequestFields.Q, req),getParameterValue(
+				RepoRequestFields.P, req), getParameterValue(
+				RepoRequestFields.L, req), getParameterValue(
+				RepoRequestFields.CAT, req), getParameterValue(
+				RepoRequestFields.T, req), getParameterValue(
+				SearchRequestFields.C, req));
 	}
 
 	/**
