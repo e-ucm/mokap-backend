@@ -48,6 +48,7 @@ public class CloudStorageAccess implements StorageInterface {
 	}
 
 	@Override
+	public List<String> getTnsUrls(long keyId) throws IOException {
 		List<String> urls = new LinkedList<String>();
 
 		ListResult list = gcs.list(bucketName, new ListOptions.Builder()

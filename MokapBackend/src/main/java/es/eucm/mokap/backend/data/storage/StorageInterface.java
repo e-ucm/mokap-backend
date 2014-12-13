@@ -35,7 +35,7 @@ public interface StorageInterface {
 	 * @throws java.io.IOException
 	 *             If files cannot be found or Cloud Storage is unavailable
 	 */
-	List<String> getTnsUrls(String downloadUrl, long keyId) throws IOException;
+	List<String> getTnsUrls(long keyId) throws IOException;
 
 	/**
 	 * Reads a file from Cloud Storage
