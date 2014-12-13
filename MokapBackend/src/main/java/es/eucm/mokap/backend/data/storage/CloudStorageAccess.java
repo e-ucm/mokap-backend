@@ -92,4 +92,12 @@ public class CloudStorageAccess implements StorageInterface {
 		GcsFilename filename = new GcsFilename(bucketName, fileName);
 		gcs.delete(filename);
 	}
+
+	@Override
+	public long getContentsSize(long keyId) throws IOException {
+		String contentsLocation = keyId + UploadZipStructure.ZIP_EXTENSION;
+		GcsFilename filename = new GcsFilename(bucketName, contentsLocation);
+		GcsFileMetadata metadata = gcs.getMetadata(filename);
+		return metadata.getLength();
+	}
 }

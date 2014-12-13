@@ -38,6 +38,19 @@ public interface StorageInterface {
 	List<String> getTnsUrls(long keyId) throws IOException;
 
 	/**
+	 * Returns the length of the contents.zip file associated to the given
+	 * entity id (keyId).
+	 * 
+	 * @param keyId
+	 *            The key id of the item of whom contents.zip length is to be
+	 *            calculated
+	 * @return Total length of contents.zip, in bytes
+	 * @throws java.io.IOException
+	 *             If files cannot be found or Cloud Storage is unavailable
+	 */
+	long getContentsSize(long keyId) throws IOException;
+
+	/**
 	 * Reads a file from Cloud Storage
 	 * 
 	 * @param fileName
