@@ -39,12 +39,14 @@ public class MokapBackend extends HttpServlet {
 	private static final long serialVersionUID = -1883047452996950111L;
 
 	/**
-	 * Method: POST Processes post requests. -Requests must be
-	 * multipart/form-data. -The field with the file must be named "file". -The
-	 * file must be a .zip compressed file with the following contents:
-	 * -contents.zip -> A zip file with the information we'll store in Cloud
-	 * Storage -A folder with the desired thumbnails -descriptor.json -> A .json
-	 * file with the indexing information to store in Datastore
+	 * Method: POST Processes post requests.
+	 * 
+	 * <pre>
+	 * - Requests must be multipart/form-data.
+	 * - The field with the file must be named "file". 
+	 * - The file must be a .zip compressed file with the structure
+	 *   defined in {@link UploadZipStructure}.
+	 * </pre>
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
@@ -79,9 +81,8 @@ public class MokapBackend extends HttpServlet {
 	}
 
 	/**
-	 * Method: GET Processes get requests to perform a search. -Requires a
-	 * header/parameter called q (string to search for). It performs an index
-	 * search with the keyword in that header. -Requires a valid api key to
+	 * Method: GET Processes get requests to perform a search. It performs an
+	 * index search with the keyword in that header. Requires a valid api key to
 	 * work.
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)

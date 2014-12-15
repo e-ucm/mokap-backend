@@ -50,9 +50,12 @@ public class TextSearchParams extends SearchParams {
 	 *            Tag (or tags) we're looking for
 	 * @param searchCursor
 	 *            String that can be processed to resume a previous search, see
-	 *            https
-	 *            ://cloud.google.com/appengine/docs/java/javadoc/com/google
-	 *            /appengine/api/datastore/Cursor
+	 * 
+	 *            <pre>
+	 *            <a href="https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Cursor">
+	 *            https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Cursor
+	 *            </a>
+	 * </pre>
 	 */
 	public TextSearchParams(String searchString, String publisherFilter,
 			String libraryIdFilter, String categoryIdFilter, String tagFilter,

@@ -45,11 +45,13 @@ public interface DatabaseInterface {
 
 	/**
 	 * Stores an entity in Google Datastore. See
-	 * https://cloud.google.com/appengine
-	 * /docs/java/javadoc/com/google/appengine/api/datastore/Entity See
-	 * https://cloud
-	 * .google.com/appengine/docs/java/javadoc/com/google/appengine/
-	 * api/datastore/Key
+	 * 
+	 * <pre>
+	 * <a href="https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Entity">
+	 * https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Entity</a> and
+	 * <a href="https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Key">
+	 * https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Key</a>
+	 * </pre>
 	 * 
 	 * @param ent
 	 *            The entity to store
