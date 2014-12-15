@@ -20,7 +20,7 @@
 
 <p>Hello, ${fn:escapeXml(user.nickname)}! (You can
     <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
-    <form action="/adminbk.jsp" method="get">
+    <form action="admin.jsp" method="get">
         <div><input type="text" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/></div>
         <div><input type="submit" value="Switch Guestbook"/></div>
     </form>

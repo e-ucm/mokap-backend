@@ -37,16 +37,23 @@ public class SearchParamsFactory {
 	 */
 	public static SearchParams create(HttpServletRequest req) {
 
-		if(getParameterValue("f",req) != null){ // TODO Add f to SearchRequestFields or RepoRequestFields
-			return new FeaturedSearchParams(getParameterValue("f",req));
-		}else if(getParameterValue("id",req) != null){ // TODO Add id to SearchRequestFields, Control the exception in case we get a String that is not valid
-			long id = Long.parseLong(getParameterValue("id",req));
+		if (getParameterValue("f", req) != null) { // TODO Add f to
+													// SearchRequestFields or
+													// RepoRequestFields
+			return new FeaturedSearchParams(getParameterValue("f", req));
+		} else if (getParameterValue("id", req) != null) { // TODO Add id to
+															// SearchRequestFields,
+															// Control the
+															// exception in case
+															// we get a String
+															// that is not valid
+			long id = Long.parseLong(getParameterValue("id", req));
 			return new IdSearchParams(id);
-		}
-		else{
-			return new TextSearchParams(getParameterValue(SearchRequestFields.Q,
-					req), getParameterValue(RepoRequestFields.P, req),
-					getParameterValue(RepoRequestFields.L, req), getParameterValue(
+		} else {
+			return new TextSearchParams(getParameterValue(
+					SearchRequestFields.Q, req), getParameterValue(
+					RepoRequestFields.P, req), getParameterValue(
+					RepoRequestFields.L, req), getParameterValue(
 					RepoRequestFields.CAT, req), getParameterValue(
 					RepoRequestFields.T, req), getParameterValue(
 					SearchRequestFields.C, req));
