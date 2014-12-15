@@ -47,18 +47,8 @@ public class CloudStorageAccess implements StorageInterface {
 		this.downloadUrl = downloadUrl;
 	}
 
-	/**
-	 * Returns a list with the url's (filenames) of all the thumbnails related
-	 * to the keyId present in Cloud Storage
-	 * 
-	 * @param keyId
-	 *            The key id of the item of whom we're retrieving the thumbnails
-	 * @return List of the filenames
-	 * @throws java.io.IOException
-	 *             If files cannot be found or Cloud Storage is unavailable
-	 */
-	public List<String> getTnsUrls(String baseUrl, long keyId)
-			throws IOException {
+	@Override
+	public List<String> getTnsUrls(long keyId) throws IOException {
 		List<String> urls = new LinkedList<String>();
 
 		ListResult list = gcs.list(bucketName, new ListOptions.Builder()
@@ -73,16 +63,7 @@ public class CloudStorageAccess implements StorageInterface {
 		return urls;
 	}
 
-	/**
-	 * Stores a file in Cloud Storage
-	 * 
-	 * @param is
-	 *            InputStream with the file to store
-	 * @param fileName
-	 *            name of the fila in Cloud Storage
-	 * @throws IOException
-	 *             If files cannot be found or Cloud Storage is unavailable
-	 */
+	@Override
 	public void storeFile(InputStream is, String fileName) throws IOException {
 
 		GcsFilename filename = new GcsFilename(bucketName, fileName);
@@ -96,14 +77,7 @@ public class CloudStorageAccess implements StorageInterface {
 		writeChannel.close();
 	}
 
-	/**
-	 * Reads a file from Cloud Storage
-	 * 
-	 * @param fileName
-	 *            Name of the file to read
-	 * @throws IOException
-	 *             If files cannot be found or Cloud Storage is unavailable
-	 */
+	@Override
 	public InputStream readFile(String fileName) throws IOException {
 		GcsFilename filename = new GcsFilename(bucketName, fileName);
 		GcsInputChannel readChannel;
@@ -113,16 +87,17 @@ public class CloudStorageAccess implements StorageInterface {
 		return bis;
 	}
 
-	/**
-	 * Deletes a file from the Cloud Storage bucket
-	 * 
-	 * @param fileName
-	 *            Name of the file to delete
-	 * @throws IOException
-	 *             If files cannot be found or Cloud Storage is unavailable
-	 */
+	@Override
 	public void deleteFile(String fileName) throws IOException {
 		GcsFilename filename = new GcsFilename(bucketName, fileName);
 		gcs.delete(filename);
+	}
+
+	@Override
+	public long getContentsSize(long keyId) throws IOException {
+		String contentsLocation = keyId + UploadZipStructure.ZIP_EXTENSION;
+		GcsFilename filename = new GcsFilename(bucketName, contentsLocation);
+		GcsFileMetadata metadata = gcs.getMetadata(filename);
+		return metadata.getLength();
 	}
 }
