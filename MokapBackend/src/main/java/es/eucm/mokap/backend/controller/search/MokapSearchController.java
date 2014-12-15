@@ -113,9 +113,12 @@ public class MokapSearchController extends BackendController implements
 	private void prepareResponseEntity(long keyId, Map<String, Object> ent)
 			throws IOException {
 		ent.put(RepoElementFields.ENTITYREF, keyId + "");
-		ent.put(RepoElementFields.CONTENTSURL, DOWNLOAD_URL + keyId
-				+ UploadZipStructure.ZIP_EXTENSION);
-		List<String> tnsUrls = st.getTnsUrls(DOWNLOAD_URL, keyId);
+		String contentsUrl = DOWNLOAD_URL + keyId
+				+ UploadZipStructure.ZIP_EXTENSION;
+		ent.put(RepoElementFields.CONTENTSURL, contentsUrl);
+		List<String> tnsUrls = st.getTnsUrls(keyId);
+		long contentBytes = st.getContentsSize(keyId);
+		float contentMegabytes = contentBytes / (1024F * 1024F);
 		List<Integer> tnsWidths = new LinkedList<Integer>();
 		List<Integer> tnsHeights = new LinkedList<Integer>();
 		for (String tn : tnsUrls) {
@@ -130,5 +133,6 @@ public class MokapSearchController extends BackendController implements
 		ent.put(RepoElementFields.THUMBNAILURLLIST, tnsUrls);
 		ent.put(RepoElementFields.THUMBNAILWIDTHLIST, tnsWidths);
 		ent.put(RepoElementFields.THUMBNAILHEIGHTLIST, tnsHeights);
+		ent.put(RepoElementFields.CONTENTSSIZE, contentMegabytes);
 	}
 }
