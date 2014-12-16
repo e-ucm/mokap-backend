@@ -16,17 +16,29 @@
  */
 package es.eucm.mokap.backend.controller.admin;
 
+import com.google.appengine.api.users.User;
 import es.eucm.mokap.backend.model.search.SearchParams;
+
+import java.io.IOException;
 
 /**
  * Created by mario on 16/12/2014. Interface for the controllers that provide
  * access to admin entities search in database
  */
 public interface AdminController {
-    /**
-     * Retrieve a HTML table with all the resources that are marked as featured
-     * @return HTML table
-     */
-    String getFeaturedResourcesAsTable(SearchParams searchParams);
+	/**
+	 * Retrieve a HTML table with all the resources that are marked as featured
+	 * 
+	 * @return HTML table
+	 */
+	String getFeaturedResourcesAsTable()
+			throws IOException;
+
+	/**
+	 * Checks if a user is allowed to access the admin section
+	 * @param user User we're checking
+	 * @return true if the user is allowed
+	 */
+	boolean checkAllowedUser(User user);
 
 }

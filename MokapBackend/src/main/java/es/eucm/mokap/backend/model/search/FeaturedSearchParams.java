@@ -16,10 +16,12 @@
  */
 package es.eucm.mokap.backend.model.search;
 
+import es.eucm.mokap.backend.model.FeaturedCategories;
+
 /**
  * Created by mario on 15/12/2014. This class represents the parameters of a
- * search for admin content. We only need the topic of the admin content
- * group we'll be retrieving.
+ * search for admin content. We only need the topic of the admin content group
+ * we'll be retrieving.
  */
 public class FeaturedSearchParams extends SearchParams {
 	private String featuredName;
@@ -28,8 +30,8 @@ public class FeaturedSearchParams extends SearchParams {
 	 * Constructor for the admin search
 	 * 
 	 * @param featuredName
-	 *            Name of a admin group. The search will try to find this
-	 *            string in the admin field of all the elements in the index.
+	 *            Name of a admin group. The search will try to find this string
+	 *            in the admin field of all the elements in the index.
 	 */
 	public FeaturedSearchParams(String featuredName) {
 		super(null);
@@ -38,10 +40,17 @@ public class FeaturedSearchParams extends SearchParams {
 
 	@Override
 	public String getSearchQuery() {
-		if(featuredName != null)
+		if(featuredName.equals(FeaturedCategories.ALL.getValue())){
+			String q = "";
+			int i=0;
+			for(FeaturedCategories s : FeaturedCategories.values()){
+				if(i!=0){q+=" OR ";}
+				q += "featured : "+s.getValue();
+				i++;
+			}
+			return q;
+		}
 			return "featured : " + featuredName; // TODO Add admin to
-												// RepoElementFields
-		else
-			return "featured <> \"\"";
+													// RepoElementFields
 	}
 }

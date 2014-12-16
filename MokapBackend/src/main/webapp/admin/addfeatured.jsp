@@ -13,17 +13,28 @@
 <body>
 
 <%
-    UserService userService = UserServiceFactory.getUserService();
-    User user = userService.getCurrentUser();
-    if (user == "mokap@mokap.es") {
+    if (user != null) {
+        pageContext.setAttribute("user", user);
+        AdminController fc = new MokapAdminController();
+        if(fc.checkAllowedUser(user)){
+            
+        }else{
+
+%>
+                            <p>Your user is not allowed here!
+                                <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
+                                to continue.</p>
+<%
+        }
+
 
     } else {
-    %>
-    <p>Hello!
-        <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-        to continue.</p>
-    <%
-        }
-    %>
-    </body>
-    </html>
+%>
+                            <p>Hello!
+                                <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
+                                to continue.</p>
+<%
+    }
+%>
+</body>
+</html>

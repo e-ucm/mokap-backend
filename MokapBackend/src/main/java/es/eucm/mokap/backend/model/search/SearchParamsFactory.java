@@ -61,15 +61,16 @@ public class SearchParamsFactory {
 	}
 
 	/**
-	 * Creates a SearchParams subclass with information to retrieve the featured elements tagged as
-	 * the filter provided
-	 * @param filter Tag in the featured field of the entity
+	 * Creates a SearchParams subclass with information to retrieve the featured
+	 * elements tagged as the filter provided
+	 * 
+	 * @param filter
+	 *            Tag in the featured field of the entity
 	 * @return
 	 */
-	public static SearchParams createFeaturedSearch(String filter){
+	public static SearchParams createFeaturedSearch(String filter) {
 		return new FeaturedSearchParams(filter);
 	}
-
 
 	/**
 	 * Gets the value of a parameter received either in the url or in a header.

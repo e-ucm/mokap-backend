@@ -17,33 +17,40 @@
 <%
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
-    if (user == "mokap@mokap.es") {
+    if (user != null) {
         pageContext.setAttribute("user", user);
         AdminController fc = new MokapAdminController();
-        SearchParams sp = SearchParamsFactory.createFeaturedSearch(null);
-        String featTable = fc.getFeaturedResourcesAsTable(sp);
+        if(fc.checkAllowedUser(user)){
+            String featTable = fc.getFeaturedResourcesAsTable();
 
 %>
 
-<p>Hello, ${fn:escapeXml(user.nickname)}! (You can
-    <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
-    <hr>
-    <%= featTable %>
-    <hr>
-    <form id="addfeatured" name="addfeatured" method="post" action="addfeatured.jsp">
-    Insert the ID: <input type="text" id="idfeat" name="idfeat"/><br>
-    Insert the feat. category: <input type="text" id="catfeat" name="catfeat"/><br>
-    <input type="submit"/>
-    </form>
-
+                            <p>Hello, ${fn:escapeXml(user.nickname)}! (You can
+                                <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
+                                <hr>
+                                <%= featTable %>
+                                <hr>
+                                <form id="addfeatured" name="addfeatured" method="post" action="addfeatured.jsp">
+                                Insert the ID: <input type="text" id="idfeat" name="idfeat"/><br>
+                                Insert the feat. category: <input type="text" id="catfeat" name="catfeat"/><br>
+                                <input type="submit"/>
+                                </form>
 <%
-} else {
+        }else{
 %>
-<p>Hello!
-    <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-    to continue.</p>
+                            <p>Your user is not allowed here!
+                                <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
+                                to continue.</p>
+<%
+        }
+    } else {
+%>
+                            <p>Hello!
+                                <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
+                                to continue.</p>
 <%
     }
+
 %>
 
 
