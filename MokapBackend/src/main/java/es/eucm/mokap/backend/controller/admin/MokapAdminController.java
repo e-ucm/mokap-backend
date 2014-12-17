@@ -76,7 +76,8 @@ public class MokapAdminController extends BackendController implements
 
 	@Override
 	public void addFeaturedElement(long id, String category) throws Exception {
-		if (FeaturedCategories.isValidCategory(category)) {
+		if (FeaturedCategories.isValidCategory(category)
+				&& FeaturedCategories.canAddElements(category)) {
 			SearchParams sp = SearchParamsFactory.createIdSearch(id);
 			Results<ScoredDocument> results = db.searchByString(sp);
 			if (results.getNumberFound() > 0) {

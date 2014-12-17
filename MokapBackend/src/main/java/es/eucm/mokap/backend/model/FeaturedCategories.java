@@ -62,4 +62,14 @@ public enum FeaturedCategories {
 		}
 		return cats;
 	}
+
+	/**
+	 * Determines if the category can be used in an element. I.e. , you can't
+	 * set an element featured as "all"
+	 * 
+	 * @return true if the category is usable
+	 */
+	public static boolean canAddElements(String category) {
+		return !category.equals(FeaturedCategories.ALL.toString());
+	}
 }
