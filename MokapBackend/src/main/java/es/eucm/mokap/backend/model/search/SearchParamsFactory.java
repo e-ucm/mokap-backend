@@ -73,6 +73,15 @@ public class SearchParamsFactory {
 	}
 
 	/**
+	 * Creates a SearchParams subclass with information to retrieve an element by its id
+	 * @param id Id of the element to retreive
+	 * @return SearchParams object
+	 */
+	public static SearchParams createIdSearch(long id){
+		return new IdSearchParams(id);
+	}
+
+	/**
 	 * Gets the value of a parameter received either in the url or in a header.
 	 * If it's received in both, the header value prevails.
 	 * 

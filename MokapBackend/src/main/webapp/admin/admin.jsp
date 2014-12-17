@@ -28,8 +28,10 @@
                             <p>Hello, ${fn:escapeXml(user.nickname)}! (You can
                                 <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
                                 <hr>
+                                <h1>Existing featured elements</h1>
                                 <%= featTable %>
                                 <hr>
+                                <h1>Add new featured element</h1>
                                 <form id="addfeatured" name="addfeatured" method="post" action="addfeatured.jsp">
                                 Insert the ID: <input type="text" id="idfeat" name="idfeat"/><br>
                                 Insert the feat. category: <input type="text" id="catfeat" name="catfeat"/><br>

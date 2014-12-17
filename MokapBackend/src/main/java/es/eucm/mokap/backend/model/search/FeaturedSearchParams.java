@@ -40,17 +40,21 @@ public class FeaturedSearchParams extends SearchParams {
 
 	@Override
 	public String getSearchQuery() {
-		if(featuredName.equals(FeaturedCategories.ALL.getValue())){
+		if (featuredName.equals(FeaturedCategories.ALL.toString())) {
 			String q = "";
-			int i=0;
-			for(FeaturedCategories s : FeaturedCategories.values()){
-				if(i!=0){q+=" OR ";}
-				q += "featured : "+s.getValue();
-				i++;
+			int i = 0;
+			for (FeaturedCategories s : FeaturedCategories.values()) {
+				if(s!=FeaturedCategories.ALL) {
+					if (i != 0) {
+						q += " OR ";
+					}
+					q += "featured : " + s.toString();
+					i++;
+				}
 			}
 			return q;
 		}
-			return "featured : " + featuredName; // TODO Add admin to
-													// RepoElementFields
+		return "featured : " + featuredName; // TODO Add admin to
+												// RepoElementFields
 	}
 }

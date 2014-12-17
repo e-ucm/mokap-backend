@@ -31,14 +31,22 @@ public interface AdminController {
 	 * 
 	 * @return HTML table
 	 */
-	String getFeaturedResourcesAsTable()
-			throws IOException;
+	String getFeaturedResourcesAsTable() throws IOException;
 
 	/**
 	 * Checks if a user is allowed to access the admin section
-	 * @param user User we're checking
+	 * 
+	 * @param user
+	 *            User we're checking
 	 * @return true if the user is allowed
 	 */
 	boolean checkAllowedUser(User user);
+
+	/**
+	 * Adds a featured category to the item with the received id
+	 * @param id Id of the element we're featuring
+	 * @param category Feature category
+	 */
+	void addFeaturedElement(long id, String category) throws Exception;
 
 }

@@ -13,11 +13,27 @@
 <body>
 
 <%
+    UserService userService = UserServiceFactory.getUserService();
+    User user = userService.getCurrentUser();
+
     if (user != null) {
         pageContext.setAttribute("user", user);
         AdminController fc = new MokapAdminController();
         if(fc.checkAllowedUser(user)){
-            
+            long id = Long.parseLong(request.getParameter("idfeat"));
+            String cat = request.getParameter("catfeat");
+            try{
+                fc.addFeaturedElement(id,cat);
+%>
+                            <p>You added the featured element. The results may take a while to update.</p>
+                             <a href="admin.jsp">Back</a>
+<%
+            }catch(Exception e){
+%>
+                            <p>The arguments you supplied are not valid: <%= e.getMessage() %></p>
+                             <a href="admin.jsp">Back</a>
+<%
+            }
         }else{
 
 %>
@@ -33,6 +49,7 @@
                             <p>Hello!
                                 <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
                                 to continue.</p>
+
 <%
     }
 %>
