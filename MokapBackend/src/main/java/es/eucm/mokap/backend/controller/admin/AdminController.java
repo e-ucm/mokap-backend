@@ -17,7 +17,6 @@
 package es.eucm.mokap.backend.controller.admin;
 
 import com.google.appengine.api.users.User;
-import es.eucm.mokap.backend.model.search.SearchParams;
 
 import java.io.IOException;
 

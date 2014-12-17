@@ -66,7 +66,7 @@ public class SearchParamsFactory {
 	 * 
 	 * @param filter
 	 *            Tag in the featured field of the entity
-	 * @return
+	 * @return SearchParams object
 	 */
 	public static SearchParams createFeaturedSearch(String filter) {
 		return new FeaturedSearchParams(filter);

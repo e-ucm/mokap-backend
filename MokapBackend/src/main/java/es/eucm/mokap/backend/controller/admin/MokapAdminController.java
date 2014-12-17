@@ -16,7 +16,6 @@
  */
 package es.eucm.mokap.backend.controller.admin;
 
-import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.users.User;
