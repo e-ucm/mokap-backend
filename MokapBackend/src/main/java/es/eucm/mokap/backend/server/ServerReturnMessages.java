@@ -118,12 +118,17 @@ public class ServerReturnMessages {
 	public static final String INVALID_DOWNLOAD_FILENAMENULL = "ERROR: \"filename\" param is null.\"";
 
 	/**
-	 * Error message returned when trying to add a featured element in a category that doesn't exist.
+	 * Error message returned when trying to add a featured element in a
+	 * category that doesn't exist.
 	 */
-	public static final String INVALID_FEATURE_CATEGORY_NAME = "ERROR: The category specified is not valid."+System.lineSeparator()+"The valid categories are: "+ FeaturedCategories.getCategories();
+	public static final String INVALID_FEATURE_CATEGORY_NAME = "ERROR: The category specified is not valid."
+			+ System.lineSeparator()
+			+ "The valid categories are: "
+			+ FeaturedCategories.getCategories();
 
 	/**
-	 * Error message returned when trying to add a featured element with an id that doesn't exist or is not correctly formatted.
+	 * Error message returned when trying to add a featured element with an id
+	 * that doesn't exist or is not correctly formatted.
 	 */
 	public static final String INVALID_FEATURE_ID = "ERROR: The id supplied does not exist or is invalid.";
 

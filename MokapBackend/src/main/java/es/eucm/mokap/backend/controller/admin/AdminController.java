@@ -43,9 +43,22 @@ public interface AdminController {
 
 	/**
 	 * Adds a featured category to the item with the received id
-	 * @param id Id of the element we're featuring
-	 * @param category Feature category
+	 * 
+	 * @param id
+	 *            Id of the element we're featuring
+	 * @param category
+	 *            Feature category
 	 */
 	void addFeaturedElement(long id, String category) throws Exception;
+
+	/**
+	 * Removes the featured field values from the element that corresponds to
+	 * the id
+	 * 
+	 * @param id
+	 *            Id of the element
+	 * @throws Exception
+	 */
+	void unFeatureElement(long id) throws Exception;
 
 }

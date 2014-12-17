@@ -73,11 +73,14 @@ public class SearchParamsFactory {
 	}
 
 	/**
-	 * Creates a SearchParams subclass with information to retrieve an element by its id
-	 * @param id Id of the element to retreive
+	 * Creates a SearchParams subclass with information to retrieve an element
+	 * by its id
+	 * 
+	 * @param id
+	 *            Id of the element to retreive
 	 * @return SearchParams object
 	 */
-	public static SearchParams createIdSearch(long id){
+	public static SearchParams createIdSearch(long id) {
 		return new IdSearchParams(id);
 	}
 

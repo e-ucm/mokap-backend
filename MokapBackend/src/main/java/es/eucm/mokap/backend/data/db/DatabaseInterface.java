@@ -89,8 +89,12 @@ public interface DatabaseInterface {
 
 	/**
 	 * Updates an index document with the values received in a Map
-	 * @param ent Entity formatted as a Map
-	 * @param documentId Id of the document we want to update
+	 * 
+	 * @param ent
+	 *            Entity formatted as a Map
+	 * @param documentId
+	 *            Id of the document we want to update
 	 */
-	void updateIndexDocument(Map<String, Object> ent, String documentId, String entityRef);
+	void updateIndexDocument(Map<String, Object> ent, String documentId,
+			String entityRef);
 }

@@ -97,16 +97,20 @@ public class DatastoreAccess implements DatabaseInterface {
 		// Build a Document Object
 		// Add all the attributes on which search can be done
 		Map<String, Object> m = ent.getProperties();
-		String keyString = k.getId()+"";
-		addToSearchIndex(m,keyString);
+		String keyString = k.getId() + "";
+		addToSearchIndex(m, keyString);
 	}
 
 	/**
-	 * Adds the properties in a map to a Index Document. Sets the RepoElementFields.ENTITYREF property with the string received.
-	 * @param m Map with the properties
-	 * @param k Id to set in the RepoElementFields.ENTITYREF property
+	 * Adds the properties in a map to a Index Document. Sets the
+	 * RepoElementFields.ENTITYREF property with the string received.
+	 * 
+	 * @param m
+	 *            Map with the properties
+	 * @param k
+	 *            Id to set in the RepoElementFields.ENTITYREF property
 	 */
-	private void addToSearchIndex(Map<String, Object> m, String k){
+	private void addToSearchIndex(Map<String, Object> m, String k) {
 		Document.Builder b = Document.newBuilder();
 
 		for (String key : m.keySet()) {
@@ -126,7 +130,8 @@ public class DatastoreAccess implements DatabaseInterface {
 	}
 
 	@Override
-	public void updateIndexDocument(Map<String, Object> m, String documentId, String entityRef) {
+	public void updateIndexDocument(Map<String, Object> m, String documentId,
+			String entityRef) {
 		Document.Builder b = Document.newBuilder();
 
 		for (String key : m.keySet()) {
@@ -147,7 +152,9 @@ public class DatastoreAccess implements DatabaseInterface {
 
 	/**
 	 * Removes a document from the index given its Id.
-	 * @param documentId Id of the document (NOTE: Not the id of the entity)
+	 * 
+	 * @param documentId
+	 *            Id of the document (NOTE: Not the id of the entity)
 	 */
 	private void removeIndexDocument(String documentId) {
 		IndexSpec indexSpec = IndexSpec.newBuilder().setName("Resource")
@@ -156,6 +163,5 @@ public class DatastoreAccess implements DatabaseInterface {
 				indexSpec);
 		index.delete(documentId);
 	}
-
 
 }

@@ -44,7 +44,7 @@ public class FeaturedSearchParams extends SearchParams {
 			String q = "";
 			int i = 0;
 			for (FeaturedCategories s : FeaturedCategories.values()) {
-				if(s!=FeaturedCategories.ALL) {
+				if (s != FeaturedCategories.ALL) {
 					if (i != 0) {
 						q += " OR ";
 					}

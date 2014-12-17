@@ -43,7 +43,8 @@ public class MokapAdminController extends BackendController implements
 		String search = "";
 		String tblStr = "<table><tr><td>Category</td><td>ID</td><td>Name</td></tr>";
 
-		sp = SearchParamsFactory.createFeaturedSearch(FeaturedCategories.ALL.toString());
+		sp = SearchParamsFactory.createFeaturedSearch(FeaturedCategories.ALL
+				.toString());
 		search = sp.getSearchQuery();
 		results = db.searchByString(sp);
 
@@ -53,9 +54,8 @@ public class MokapAdminController extends BackendController implements
 						RepoElementFields.ENTITYREF).getText());
 				Map<String, Object> ent = db.getEntityByIdAsMap(keyId);
 				tblStr += "<tr>";
-				tblStr += "<td>"+search+"</td>";
-				tblStr += "<td>" + keyId
-						+ "</td>";
+				tblStr += "<td>" + search + "</td>";
+				tblStr += "<td>" + keyId + "</td>";
 				tblStr += "<td>" + ent.get(RepoElementFields.NAMELIST)
 						+ "</td>";
 
@@ -66,19 +66,17 @@ public class MokapAdminController extends BackendController implements
 			}
 		}
 
-
-
 		return tblStr += "</table>";
 	}
 
-	@Override // TODO actually check the user
+	@Override
 	public boolean checkAllowedUser(User user) {
-		return true;
+		return AllowedUsers.isUserAllowed(user);
 	}
 
 	@Override
 	public void addFeaturedElement(long id, String category) throws Exception {
-		if(FeaturedCategories.isValidCategory(category)) {
+		if (FeaturedCategories.isValidCategory(category)) {
 			SearchParams sp = SearchParamsFactory.createIdSearch(id);
 			Results<ScoredDocument> results = db.searchByString(sp);
 			if (results.getNumberFound() > 0) {
@@ -86,19 +84,42 @@ public class MokapAdminController extends BackendController implements
 					long keyId = Long.parseLong(sd.getOnlyField(
 							RepoElementFields.ENTITYREF).getText());
 					Map<String, Object> ent = db.getEntityByIdAsMap(keyId);
-					if (!ent.containsKey("featured")) { // TODO change featured for the Managed class
+					if (!ent.containsKey("featured")) { // TODO change featured
+														// for the Managed class
 						ent.put("featured", category);
-					}else{
-						ent.put("featured", ent.get("featured")+" "+category);
+					} else {
+						ent.put("featured", ent.get("featured") + " "
+								+ category);
 					}
 
-					db.updateIndexDocument(ent,sd.getId(),keyId+"");
+					db.updateIndexDocument(ent, sd.getId(), keyId + "");
 				}
 			} else {
 				throw new Exception(ServerReturnMessages.INVALID_FEATURE_ID);
 			}
-		}else{
-			throw new Exception(ServerReturnMessages.INVALID_FEATURE_CATEGORY_NAME);
+		} else {
+			throw new Exception(
+					ServerReturnMessages.INVALID_FEATURE_CATEGORY_NAME);
+		}
+	}
+
+	@Override
+	public void unFeatureElement(long id) throws Exception {
+		SearchParams sp = SearchParamsFactory.createIdSearch(id);
+		Results<ScoredDocument> results = db.searchByString(sp);
+		if (results.getNumberFound() > 0) {
+			for (ScoredDocument sd : results) {
+				long keyId = Long.parseLong(sd.getOnlyField(
+						RepoElementFields.ENTITYREF).getText());
+				Map<String, Object> ent = db.getEntityByIdAsMap(keyId);
+				if (ent.containsKey("featured")) { // TODO change featured for
+													// the Managed class
+					ent.remove("featured");
+				}
+				db.updateIndexDocument(ent, sd.getId(), keyId + "");
+			}
+		} else {
+			throw new Exception(ServerReturnMessages.INVALID_FEATURE_ID);
 		}
 	}
 }

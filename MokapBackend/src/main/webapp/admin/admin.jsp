@@ -37,6 +37,12 @@
                                 Insert the feat. category: <input type="text" id="catfeat" name="catfeat"/><br>
                                 <input type="submit"/>
                                 </form>
+                                <hr>
+                                <h1>Unfeature an element</h1>
+                                <form id="remfeatured" name="remfeatured" method="post" action="remfeatured.jsp">
+                                Insert the ID: <input type="text" id="idfeat" name="idfeat"/><br>
+                                <input type="submit"/>
+                                </form>
 <%
         }else{
 %>

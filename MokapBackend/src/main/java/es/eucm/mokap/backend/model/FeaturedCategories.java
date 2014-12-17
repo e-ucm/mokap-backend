@@ -36,7 +36,7 @@ public enum FeaturedCategories {
 		return this.value;
 	}
 
-	public static boolean isValidCategory(String catName){
+	public static boolean isValidCategory(String catName) {
 		for (FeaturedCategories c : FeaturedCategories.values()) {
 			if (c.toString().equals(catName)) {
 				return true;
@@ -47,13 +47,16 @@ public enum FeaturedCategories {
 
 	/**
 	 * Generates a string with the existing categories separated by commas
+	 * 
 	 * @return String with the categories
 	 */
-	public static String getCategories(){
+	public static String getCategories() {
 		String cats = "";
-		int i=0;
+		int i = 0;
 		for (FeaturedCategories c : FeaturedCategories.values()) {
-			if(i!=0){cats+=", ";}
+			if (i != 0) {
+				cats += ", ";
+			}
 			cats += c.toString();
 			i++;
 		}
