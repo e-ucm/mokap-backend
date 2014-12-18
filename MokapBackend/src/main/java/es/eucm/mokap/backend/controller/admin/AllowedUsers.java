@@ -23,7 +23,7 @@ import com.google.appengine.api.users.User;
  * allows access to the admin pages of the app
  */
 public class AllowedUsers {
-	private static String[] whiteList = { "mokap@mokap.es",
+	private static String[] whiteList = { "mokap@e-ucm.es",
 			"mariodebenito@gmail.com" };
 
 	/**
