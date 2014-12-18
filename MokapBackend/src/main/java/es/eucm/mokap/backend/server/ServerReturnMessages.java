@@ -17,6 +17,7 @@
 package es.eucm.mokap.backend.server;
 
 import es.eucm.mokap.backend.controller.insert.UploadZipStructure;
+import es.eucm.mokap.backend.model.FeaturedCategories;
 
 /**
  * All return messages the server responds to any request. Messages can contain
@@ -115,6 +116,21 @@ public class ServerReturnMessages {
 	 * Request) return error.
 	 */
 	public static final String INVALID_DOWNLOAD_FILENAMENULL = "ERROR: \"filename\" param is null.\"";
+
+	/**
+	 * Error message returned when trying to add a featured element in a
+	 * category that doesn't exist.
+	 */
+	public static final String INVALID_FEATURE_CATEGORY_NAME = "ERROR: The category specified is not valid."
+			+ System.lineSeparator()
+			+ "The valid categories are: "
+			+ FeaturedCategories.getCategories();
+
+	/**
+	 * Error message returned when trying to add a featured element with an id
+	 * that doesn't exist or is not correctly formatted.
+	 */
+	public static final String INVALID_FEATURE_ID = "ERROR: The id supplied does not exist or is invalid.";
 
 	/**
 	 * Creates a return message of the given type with the given parameters.

@@ -144,6 +144,7 @@ public class MokapSearchController extends BackendController implements
 		ent.put(RepoElementFields.THUMBNAILURLLIST, tnsUrls);
 		ent.put(RepoElementFields.THUMBNAILWIDTHLIST, tnsWidths);
 		ent.put(RepoElementFields.THUMBNAILHEIGHTLIST, tnsHeights);
-		ent.put(RepoElementFields.CONTENTSSIZE, contentMegabytes);
+		ent.put("contentsSize", contentMegabytes); // TODO Change to
+													// RepoElementFields.CONTENTSSIZE
 	}
 }
