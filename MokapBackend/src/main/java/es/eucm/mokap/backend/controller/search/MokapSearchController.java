@@ -130,21 +130,12 @@ public class MokapSearchController extends BackendController implements
 		List<String> tnsUrls = st.getTnsUrls(keyId);
 		long contentBytes = st.getContentsSize(keyId);
 		float contentMegabytes = contentBytes / (1024F * 1024F);
-		List<Integer> tnsWidths = new LinkedList<Integer>();
-		List<Integer> tnsHeights = new LinkedList<Integer>();
-		for (String tn : tnsUrls) {
-			int lastSeparator = tn.lastIndexOf("/") + 1;
-			String end = tn.substring(lastSeparator);
-			String res = end.split("\\.")[0];
-			String[] resolutionParams = res.split("x");
-			tnsWidths.add(Integer.parseInt(resolutionParams[0]));
-			tnsHeights.add(Integer.parseInt(resolutionParams[1]));
-		}
 
 		ent.put(RepoElementFields.THUMBNAILURLLIST, tnsUrls);
-		ent.put(RepoElementFields.THUMBNAILWIDTHLIST, tnsWidths);
-		ent.put(RepoElementFields.THUMBNAILHEIGHTLIST, tnsHeights);
-		ent.put("contentsSize", contentMegabytes); // TODO Change to
-													// RepoElementFields.CONTENTSSIZE
+		ent.put(RepoElementFields.CONTENTSSIZE, contentMegabytes);
+		// Remove thumbnail width and height lists, just in case they were
+		// stored
+		ent.remove(RepoElementFields.THUMBNAILHEIGHTLIST);
+		ent.remove(RepoElementFields.THUMBNAILWIDTHLIST);
 	}
 }
