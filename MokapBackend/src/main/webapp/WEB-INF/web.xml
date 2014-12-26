@@ -18,9 +18,9 @@
   
   <servlet>
     <servlet-name>download</servlet-name>
-    <servlet-class>es.eucm.mokap.backend.server.ResourceDownload</servlet-class>
+    <servlet-class>es.eucm.mokap.backend.server.DownloadServlet</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>download</servlet-name>
     <url-pattern>/download</url-pattern>
