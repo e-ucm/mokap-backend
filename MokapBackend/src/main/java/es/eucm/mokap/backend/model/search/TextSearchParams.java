@@ -59,13 +59,15 @@ public class TextSearchParams extends SearchParams {
 	 */
 	public TextSearchParams(String searchString, String publisherFilter,
 			String libraryIdFilter, String categoryIdFilter, String tagFilter,
-			String searchCursor) {
+			String searchCursor, String width, String height) {
 		super(searchCursor);
 		this.publisherFilter = publisherFilter;
 		this.libraryIdFilter = libraryIdFilter;
 		this.categoryIdFilter = categoryIdFilter;
 		this.tagFilter = tagFilter;
 		this.searchString = searchString;
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override

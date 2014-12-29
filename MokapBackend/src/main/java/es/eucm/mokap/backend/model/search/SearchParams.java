@@ -21,7 +21,31 @@ package es.eucm.mokap.backend.model.search;
  * parameter options
  */
 public abstract class SearchParams {
+
+	public static final String DEFAULT_WIDTH = "512";
+	public static final String DEFAULT_HEIGHT = "512";
+
 	protected String searchCursor;
+
+	protected String width = DEFAULT_WIDTH;
+
+	protected String height = DEFAULT_HEIGHT;
+
+	public String getWidth() {
+		return width;
+	}
+
+	public void setWidth(String width) {
+		this.width = width;
+	}
+
+	public String getHeight() {
+		return height;
+	}
+
+	public void setHeight(String height) {
+		this.height = height;
+	}
 
 	public SearchParams(String searchCursor) {
 		this.searchCursor = searchCursor;

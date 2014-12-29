@@ -32,9 +32,11 @@ public class IdSearchParams extends SearchParams {
 	 * @param id
 	 *            Id of the element we want to retrieve
 	 */
-	public IdSearchParams(long id) {
+	public IdSearchParams(long id, String width, String height) {
 		super(null);
 		this.id = id;
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override
