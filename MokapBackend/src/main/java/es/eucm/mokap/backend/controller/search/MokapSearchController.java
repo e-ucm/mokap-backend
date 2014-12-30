@@ -71,7 +71,7 @@ public class MokapSearchController extends BackendController implements
 		gr.setSearchString(sp.getSearchQuery());
 
 		// Iterate the results and find the corresponding entities
-		fillResults(gr, results);
+		fillResults(sp.getWidth(), sp.getHeight(), gr, results);
 		String str = gr.toJsonString();
 		return str;
 	}
@@ -86,13 +86,14 @@ public class MokapSearchController extends BackendController implements
 	 * @param results
 	 *            List of results we're processing
 	 */
-	private void fillResults(SearchResponse gr, Results<ScoredDocument> results) {
+	private void fillResults(String width, String height, SearchResponse gr,
+			Results<ScoredDocument> results) {
 		for (ScoredDocument sd : results) {
 			try {
 				long keyId = Long.parseLong(sd.getOnlyField(
 						RepoElementFields.ENTITYREF).getText());
 				Map<String, Object> ent = db.getEntityByIdAsMap(keyId);
-				prepareResponseEntity(keyId, ent);
+				prepareResponseEntity(keyId, width, height, ent);
 
 				gr.addResult(ent);
 			} catch (Exception e) {
@@ -121,8 +122,8 @@ public class MokapSearchController extends BackendController implements
 	 *            Entity we're modifying already converted to hashmap
 	 * @throws IOException
 	 */
-	private void prepareResponseEntity(long keyId, Map<String, Object> ent)
-			throws IOException {
+	private void prepareResponseEntity(long keyId, String width, String height,
+			Map<String, Object> ent) throws IOException {
 		ent.put(RepoElementFields.ENTITYREF, keyId + "");
 		String contentsUrl = DOWNLOAD_URL + keyId
 				+ UploadZipStructure.ZIP_EXTENSION;
@@ -131,11 +132,82 @@ public class MokapSearchController extends BackendController implements
 		long contentBytes = st.getContentsSize(keyId);
 		float contentMegabytes = contentBytes / (1024F * 1024F);
 
-		ent.put(RepoElementFields.THUMBNAILURLLIST, tnsUrls);
+		ent.put(RepoElementFields.THUMBNAILURL,
+				pickThumbnail(tnsUrls, width, height));
 		ent.put(RepoElementFields.CONTENTSSIZE, contentMegabytes);
-		// Remove thumbnail width and height lists, just in case they were
-		// stored
-		ent.remove(RepoElementFields.THUMBNAILHEIGHTLIST);
-		ent.remove(RepoElementFields.THUMBNAILWIDTHLIST);
+	}
+
+	/**
+	 * Picks the best thumbnail available from the list
+	 * 
+	 * @param tnsUrls
+	 *            for the given preferred
+	 * @param width
+	 *            and
+	 * @param height
+	 *            .
+	 * @return A thumbnail url from the list where its area (width x height)
+	 *         meets the next criteria: (1) Covers the preferred area
+	 *         (width>=preferredWidth && height>=preferredHeight) and (2) The
+	 *         difference with the preferred area (width*height -
+	 *         preferredWidth*preferredHeight) is minimum
+	 * 
+	 *         If no thumbnail meets condition (1), then the thumbnail with
+	 *         closest area to the preferred thumbnail is returned
+	 */
+	public String pickThumbnail(List<String> tnsUrls, String width,
+			String height) {
+		int preferredWidth = Integer.parseInt(width);
+		int preferredHeight = Integer.parseInt(height);
+		if (tnsUrls.size() == 0) {
+			return null;
+		}
+
+		SelectedThumbnail selectedThumbnail = new SelectedThumbnail();
+		SelectedThumbnail option = new SelectedThumbnail();
+		selectedThumbnail.set(tnsUrls.get(0), preferredWidth, preferredHeight);
+		for (int i = 1; i < tnsUrls.size(); i++) {
+			option.set(tnsUrls.get(i), preferredWidth, preferredHeight);
+			if (!selectedThumbnail.coversArea
+					&& option.coversArea
+					|| selectedThumbnail.coversArea == option.coversArea
+					&& Math.abs(option.areaDifference) < Math
+							.abs(selectedThumbnail.areaDifference)) {
+				selectedThumbnail.copy(option);
+			}
+		}
+
+		return selectedThumbnail.url;
+	}
+
+	private static class SelectedThumbnail {
+		String url;
+		int width;
+		int height;
+		long areaDifference;
+		boolean coversArea;
+
+		public void set(String url, int preferredWidth, int preferredHeight) {
+			this.url = url;
+			String fileName = url.substring(url.lastIndexOf("/") + 1,
+					url.lastIndexOf("."));
+			String w = fileName.substring(0, fileName.toLowerCase()
+					.indexOf("x"));
+			String h = fileName.substring(
+					fileName.toLowerCase().indexOf("x") + 1, fileName.length());
+			width = Integer.parseInt(w);
+			height = Integer.parseInt(h);
+
+			coversArea = width >= preferredWidth && height >= preferredHeight;
+			areaDifference = width * height - preferredWidth * preferredHeight;
+		}
+
+		public void copy(SelectedThumbnail otherThumbnail) {
+			this.url = otherThumbnail.url;
+			this.width = otherThumbnail.width;
+			this.height = otherThumbnail.height;
+			this.areaDifference = otherThumbnail.areaDifference;
+			this.coversArea = otherThumbnail.coversArea;
+		}
 	}
 }

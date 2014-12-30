@@ -33,9 +33,11 @@ public class FeaturedSearchParams extends SearchParams {
 	 *            Name of a admin group. The search will try to find this string
 	 *            in the admin field of all the elements in the index.
 	 */
-	public FeaturedSearchParams(String featuredName) {
+	public FeaturedSearchParams(String featuredName, String width, String height) {
 		super(null);
 		this.featuredName = featuredName;
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override

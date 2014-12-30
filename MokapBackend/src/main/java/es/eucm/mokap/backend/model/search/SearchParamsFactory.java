@@ -36,11 +36,20 @@ public class SearchParamsFactory {
 	 * @return SearchParams object
 	 */
 	public static SearchParams create(HttpServletRequest req) {
+		String width = getParameterValue(RepoRequestFields.W, req);
+		String height = getParameterValue(RepoRequestFields.H, req);
+		if (width == null) {
+			width = SearchParams.DEFAULT_WIDTH;
+		}
+		if (height == null) {
+			height = SearchParams.DEFAULT_HEIGHT;
+		}
 
 		if (getParameterValue("f", req) != null) { // TODO Add f to
 													// SearchRequestFields or
 													// RepoRequestFields
-			return new FeaturedSearchParams(getParameterValue("f", req));
+			return new FeaturedSearchParams(getParameterValue("f", req), width,
+					height);
 		} else if (getParameterValue("id", req) != null) { // TODO Add id to
 															// SearchRequestFields,
 															// Control the
@@ -48,7 +57,7 @@ public class SearchParamsFactory {
 															// we get a String
 															// that is not valid
 			long id = Long.parseLong(getParameterValue("id", req));
-			return new IdSearchParams(id);
+			return new IdSearchParams(id, width, height);
 		} else {
 			return new TextSearchParams(getParameterValue(
 					SearchRequestFields.Q, req), getParameterValue(
@@ -56,7 +65,7 @@ public class SearchParamsFactory {
 					RepoRequestFields.L, req), getParameterValue(
 					RepoRequestFields.CAT, req), getParameterValue(
 					RepoRequestFields.T, req), getParameterValue(
-					SearchRequestFields.C, req));
+					SearchRequestFields.C, req), width, height);
 		}
 	}
 
@@ -69,7 +78,8 @@ public class SearchParamsFactory {
 	 * @return SearchParams object
 	 */
 	public static SearchParams createFeaturedSearch(String filter) {
-		return new FeaturedSearchParams(filter);
+		return new FeaturedSearchParams(filter, SearchParams.DEFAULT_WIDTH,
+				SearchParams.DEFAULT_HEIGHT);
 	}
 
 	/**
@@ -81,7 +91,8 @@ public class SearchParamsFactory {
 	 * @return SearchParams object
 	 */
 	public static SearchParams createIdSearch(long id) {
-		return new IdSearchParams(id);
+		return new IdSearchParams(id, SearchParams.DEFAULT_WIDTH,
+				SearchParams.DEFAULT_HEIGHT);
 	}
 
 	/**
