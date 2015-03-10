@@ -25,6 +25,7 @@
     <property name="backend.BUCKET_NAME" value="mokap-backend.appspot.com" />
     <property name="backend.MAX_FILE_SIZE" value="33000000" />
     <property name="backend.BASE_URL" value="http://api.mokap.es/" />
+      <property name="backend.ANALYTICS_ID" value="UA-4995347-8" />
 
   </system-properties>
 
