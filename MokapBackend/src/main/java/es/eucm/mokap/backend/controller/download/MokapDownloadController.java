@@ -18,7 +18,7 @@ package es.eucm.mokap.backend.controller.download;
 
 import com.google.gwt.thirdparty.guava.common.io.ByteStreams;
 import es.eucm.mokap.backend.controller.BackendController;
-import es.eucm.mokap.backend.reporting.Reporting;
+import es.eucm.mokap.backend.reporting.Reporter;
 import es.eucm.mokap.backend.reporting.ga.GoogleReporter;
 
 import java.io.BufferedOutputStream;
@@ -48,10 +48,13 @@ public class MokapDownloadController extends BackendController implements
 		InputStream bis = null;
 		OutputStream bos = null;
 
-		Reporting rep = new GoogleReporter();
-
 		// Read the file
 		bis = st.readFile(fileName);
+
+        // Track the download in Analytics
+        Reporter rep = new GoogleReporter();
+        rep.reportDownload(fileName);
+
 		// Output the file
 		bos = new BufferedOutputStream(outputStream);
 
@@ -59,6 +62,6 @@ public class MokapDownloadController extends BackendController implements
 		bos.flush();
 		bis.close();
 		bos.close();
-        rep.reportDownload(fileName);
+
 	}
 }

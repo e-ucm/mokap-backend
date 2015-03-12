@@ -16,19 +16,30 @@
  */
 package es.eucm.mokap.backend.reporting.ga;
 
-import es.eucm.mokap.backend.reporting.Reporting;
+import es.eucm.mokap.backend.reporting.Reporter;
 
 import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Created by reyde_000 on 09/03/2015.
+ * Class that interfaces between the application and the Google API
  */
-public class GoogleReporter implements Reporting {
+public class GoogleReporter implements Reporter {
 
 	GoogleAnalyticsAPI gat;
+	/**
+	 * We get the TID from the properties
+	 */
 	private static String TID = System.getProperty("backend.ANALYTICS_ID");
 
+	/**
+	 * Default constructor, creates a GoogleAnalyticsAPI object with the TID we
+	 * obtained from the properties and generates a client ID with UUID
+	 * formatting (See
+	 * http://es.wikipedia.org/wiki/Universally_unique_identifier)
+	 * 
+	 * @throws IOException
+	 */
 	public GoogleReporter() throws IOException {
 		gat = new GoogleAnalyticsAPI(TID);
 		gat.setGoogleAnalyticsClientId(UUID.randomUUID().toString());

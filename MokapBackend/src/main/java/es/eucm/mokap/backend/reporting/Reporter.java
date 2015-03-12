@@ -21,7 +21,7 @@ import java.io.IOException;
 /**
  * Created by reyde_000 on 09/03/2015.
  */
-public interface Reporting {
+public interface Reporter {
 	/**
 	 * Reports the download of a file
 	 * 

@@ -26,35 +26,38 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Class that actually interacts with GA via HTTP requests, using the Measurement protocol.
+ * Class that actually interacts with GA via HTTP requests, using the
+ * Measurement protocol.
  */
 public class GoogleAnalyticsAPI {
-    /**
-     * Url of the analytics service.
-     */
+	/**
+	 * Url of the analytics service.
+	 */
 	private static final String GA_URL_ENDPOINT = "www.google-analytics.com/collect";
-    /**
-     * Required header
-     */
+	/**
+	 * Required header
+	 */
 	private static final HTTPHeader CONTENT_TYPE_HEADER = new HTTPHeader(
 			"Content-Type", "application/x-www-form-urlencoded");
-    /**
-     * Tracking id for our APP
-     */
+	/**
+	 * Tracking id for our APP
+	 */
 	private final String gaTrackingId; // Tracking ID / Web property / Property
-    /**
-     * Client Id, 555 is anonymous
-      */
+	/**
+	 * Client Id, 555 is anonymous
+	 */
 	private String gaClientId = "555"; // Anonymous Client ID.
 
 	private URLFetchService urlFetchService = URLFetchServiceFactory
 			.getURLFetchService();
 
-    /**
-     * Default constructor that receives the TID from analytics as a parameter
-     * @param gaTrackingId A string with the analytics tracking ID
-     * @throws IOException
-     */
+	/**
+	 * Default constructor that receives the TID from analytics as a parameter
+	 * 
+	 * @param gaTrackingId
+	 *            A string with the analytics tracking ID
+	 * @throws IOException
+	 */
 	public GoogleAnalyticsAPI(String gaTrackingId) throws IOException {
 		if (gaTrackingId == null) {
 			throw new IllegalArgumentException(
@@ -63,12 +66,14 @@ public class GoogleAnalyticsAPI {
 		this.gaTrackingId = gaTrackingId;
 	}
 
-    /**
-     * Sets a specific clientId to process the data with sessions
-     * @param gaClientId string with the client ID
-     * @return The GA object whose clientId was set
-     * @throws IOException
-     */
+	/**
+	 * Sets a specific clientId to process the data with sessions
+	 * 
+	 * @param gaClientId
+	 *            string with the client ID
+	 * @return The GA object whose clientId was set
+	 * @throws IOException
+	 */
 	public GoogleAnalyticsAPI setGoogleAnalyticsClientId(String gaClientId)
 			throws IOException {
 		if (gaClientId == null) {
@@ -90,8 +95,8 @@ public class GoogleAnalyticsAPI {
 	 *            the optional event label
 	 * @param value
 	 *            the optional value
-     * @param appName
-     *            the name of the app calling this method
+	 * @param appName
+	 *            the name of the app calling this method
 	 * @return true if the call succeeded, otherwise false
 	 * @exception java.io.IOException
 	 *                if the URL could not be posted to
@@ -99,38 +104,37 @@ public class GoogleAnalyticsAPI {
 	public int trackEventToGoogleAnalytics(String category, String action,
 			String label, String value, String appName) throws IOException {
 
-        String url = GA_URL_ENDPOINT + "?"+
-                    "v=1&"+
-                "tid="+gaTrackingId+"&"+
-                "cid="+gaClientId+"&"+
-                "t=event&"+
-                "ec="+encode(category, true)+"&"+
-                "ea="+encode(action, true)+"&"+
-                "el="+encode(label,true)+"&"+
-                "ev="+encode(value,true)+"&"+
-                "an="+encode(appName,false)+"&"+
-                "z="+encode(((Math.floor(Math.random() * 10000))) + "", false);
+		String url = GA_URL_ENDPOINT + "?" + "v=1&" + "tid=" + gaTrackingId
+				+ "&" + "cid=" + gaClientId + "&" + "t=event&" + "ec="
+				+ encode(category, true) + "&" + "ea=" + encode(action, true)
+				+ "&" + "el=" + encode(label, true) + "&" + "ev="
+				+ encode(value, true) + "&" + "an=" + encode(appName, false)
+				+ "&" + "z="
+				+ encode(((Math.floor(Math.random() * 10000))) + "", false);
 
-
-        HTTPRequest request = new HTTPRequest(new URL("http",url,""), HTTPMethod.POST);
+		HTTPRequest request = new HTTPRequest(new URL("http", url, ""),
+				HTTPMethod.POST);
 		request.addHeader(CONTENT_TYPE_HEADER);
 
 		HTTPResponse httpResponse = urlFetchService.fetch(request);
 		// TODO TESTING
-        System.out.println(url);
+		System.out.println(url);
 		System.out.println(httpResponse.getResponseCode());
 
 		// Return True if the call was successful.
 		return httpResponse.getResponseCode();
 	}
 
-    /**
-     * Encodes the string to be able to be passed inside a URL (UTF-8)
-     * @param value value of the String
-     * @param required true if it is a required parameter
-     * @return encoded string
-     * @throws UnsupportedEncodingException
-     */
+	/**
+	 * Encodes the string to be able to be passed inside a URL (UTF-8)
+	 * 
+	 * @param value
+	 *            value of the String
+	 * @param required
+	 *            true if it is a required parameter
+	 * @return encoded string
+	 * @throws UnsupportedEncodingException
+	 */
 	private static String encode(String value, boolean required)
 			throws UnsupportedEncodingException {
 		if (value == null) {
@@ -143,4 +147,3 @@ public class GoogleAnalyticsAPI {
 		return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
 	}
 }
-
