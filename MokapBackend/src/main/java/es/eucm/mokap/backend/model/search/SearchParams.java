@@ -16,6 +16,9 @@
  */
 package es.eucm.mokap.backend.model.search;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 /**
  * Created by mario on 09/12/2014. Parent class for the different search
  * parameter options
@@ -60,10 +63,10 @@ public abstract class SearchParams {
 	}
 
 	/**
-	 * Generates the query we'll use to retrieve the search results from the
+	 * Generates the reports we'll use to retrieve the search results from the
 	 * database
 	 * 
 	 * @return Query String
 	 */
-	public abstract String getSearchQuery();
+	public abstract String getSearchQuery() throws Exception;
 }

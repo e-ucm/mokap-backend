@@ -14,19 +14,19 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package es.eucm.mokap.backend.reporting;
+package es.eucm.mokap.backend.reporting.reports;
+
+import es.eucm.mokap.backend.model.TimeSpans;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by reyde_000 on 09/03/2015.
+ * Created by reyde_000 on 12/03/2015.
  */
 public interface Reporter {
-	/**
-	 * Reports the download of a file
-	 * 
-	 * @param fileName
-	 *            name of the file
-	 */
-	public void reportDownload(String fileName) throws IOException;
+	Map<String, Integer> getMostDownloaded(TimeSpans timeSpan)
+			throws GeneralSecurityException, IOException;
 }

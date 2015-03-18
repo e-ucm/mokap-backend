@@ -58,6 +58,15 @@ public class SearchParamsFactory {
 															// that is not valid
 			long id = Long.parseLong(getParameterValue("id", req));
 			return new IdSearchParams(id, width, height);
+		} else if (getParameterValue("md", req) != null) { // Most Downloaded
+			return new MostDownloadedSearchParams(getParameterValue("md", req)); // with
+																					// parameter
+																					// for
+																					// the
+																					// time
+																					// span
+																					// we're
+																					// analyzing
 		} else {
 			return new TextSearchParams(getParameterValue(
 					SearchRequestFields.Q, req), getParameterValue(

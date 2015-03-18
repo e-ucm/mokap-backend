@@ -85,24 +85,31 @@ public class MokapBackend extends HttpServlet {
 	 * index search with the keyword in that header. Requires a valid api key to
 	 * work.
 	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+	@Override
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) {
 		MokapSearchController sCont = new MokapSearchController();
 		// Check api key
-		if (!ApiKeyVerifier.checkApiKey(req, resp)) {
-			return;
-		} else {
-			PrintWriter out = resp.getWriter();
+		try {
+			if (!ApiKeyVerifier.checkApiKey(req, resp)) {
+				PrintWriter out = resp.getWriter();
+				out.print("Wrong API key.");
+				out.flush();
+				out.close();
+			} else {
+				PrintWriter out = resp.getWriter();
 
-			// Get the parameters from the header / parameter
-			SearchParams sp = SearchParamsFactory.create(req);
-			String str = sCont.performSearch(sp);
-			// Set the response encoding
-			resp.setCharacterEncoding("UTF-8");
-			resp.setContentType("application/json");
-			out.print(str);
-			out.flush();
-			out.close();
+				// Get the parameters from the header / parameter
+				SearchParams sp = SearchParamsFactory.create(req);
+				String str = sCont.performSearch(sp);
+				// Set the response encoding
+				resp.setCharacterEncoding("UTF-8");
+				resp.setContentType("application/json");
+				out.print(str);
+				out.flush();
+				out.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

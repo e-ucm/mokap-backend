@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 // [START tracking_code]
-package es.eucm.mokap.backend.reporting.ga;
+package es.eucm.mokap.backend.reporting.tracker.ga;
 
 import com.google.appengine.api.urlfetch.*;
 
@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
  * Class that actually interacts with GA via HTTP requests, using the
  * Measurement protocol.
  */
-public class GoogleAnalyticsAPI {
+public class GoogleAnalyticsTracker {
 	/**
 	 * Url of the analytics service.
 	 */
@@ -58,7 +58,7 @@ public class GoogleAnalyticsAPI {
 	 *            A string with the analytics tracking ID
 	 * @throws IOException
 	 */
-	public GoogleAnalyticsAPI(String gaTrackingId) throws IOException {
+	public GoogleAnalyticsTracker(String gaTrackingId) throws IOException {
 		if (gaTrackingId == null) {
 			throw new IllegalArgumentException(
 					"Can't set gaTrackingId to a null value.");
@@ -74,7 +74,7 @@ public class GoogleAnalyticsAPI {
 	 * @return The GA object whose clientId was set
 	 * @throws IOException
 	 */
-	public GoogleAnalyticsAPI setGoogleAnalyticsClientId(String gaClientId)
+	public GoogleAnalyticsTracker setGoogleAnalyticsClientId(String gaClientId)
 			throws IOException {
 		if (gaClientId == null) {
 			throw new IllegalArgumentException(

@@ -37,7 +37,7 @@ public class MokapAdminController extends BackendController implements
 		AdminController {
 
 	@Override
-	public String getFeaturedResourcesAsTable() throws IOException {
+	public String getFeaturedResourcesAsTable() throws Exception {
 		Results<ScoredDocument> results = null;
 		SearchParams sp = null;
 		String search = "";

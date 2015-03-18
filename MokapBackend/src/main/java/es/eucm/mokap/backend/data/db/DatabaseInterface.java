@@ -41,7 +41,8 @@ public interface DatabaseInterface {
 	 *         https://cloud.google.com/appengine/docs/java/search/results
 	 * @throws IOException
 	 */
-	Results<ScoredDocument> searchByString(SearchParams sp) throws IOException;
+	Results<ScoredDocument> searchByString(SearchParams sp) throws
+            Exception;
 
 	/**
 	 * Stores an entity in Google Datastore. See

@@ -30,7 +30,7 @@ public interface AdminController {
 	 * 
 	 * @return HTML table
 	 */
-	String getFeaturedResourcesAsTable() throws IOException;
+	String getFeaturedResourcesAsTable() throws Exception;
 
 	/**
 	 * Checks if a user is allowed to access the admin section

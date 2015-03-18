@@ -39,7 +39,7 @@ public class DatastoreAccess implements DatabaseInterface {
 
 	@Override
 	public Results<ScoredDocument> searchByString(SearchParams sp)
-			throws IOException {
+			throws Exception {
 		String cursorString = sp.getSearchCursor();
 		Cursor cursor;
 		if (cursorString != null) {
