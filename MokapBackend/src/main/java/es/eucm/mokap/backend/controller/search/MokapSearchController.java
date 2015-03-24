@@ -26,7 +26,6 @@ import es.eucm.mokap.backend.model.response.SearchResponse;
 import es.eucm.mokap.backend.model.search.SearchParams;
 
 import java.io.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 

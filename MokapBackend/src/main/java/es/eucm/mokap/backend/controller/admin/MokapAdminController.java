@@ -26,7 +26,6 @@ import es.eucm.mokap.backend.model.search.SearchParams;
 import es.eucm.mokap.backend.model.search.SearchParamsFactory;
 import es.eucm.mokap.backend.server.ServerReturnMessages;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**

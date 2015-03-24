@@ -16,13 +16,10 @@
  */
 package es.eucm.mokap.backend.model.search;
 
-import es.eucm.ead.schemax.repo.RepoElementFields;
 import es.eucm.mokap.backend.model.TimeSpans;
 import es.eucm.mokap.backend.reporting.reports.Reporter;
 import es.eucm.mokap.backend.reporting.reports.ga.GoogleAnalyticsReporter;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Map;
 
 /**
@@ -48,17 +45,18 @@ public class MostDownloadedSearchParams extends SearchParams {
 		// TODO Check API for a list of most downloaded files
 		Reporter rep = new GoogleAnalyticsReporter();
 		Map<String, Integer> md = rep.getMostDownloaded(this.timeSpan);
-        String q = "NoEventsToShow";
+		String q = "NoEventsToShow";
 		// TODO Create reports with the list
-        if(md.keySet().size()>0) {
-            q="";
-            int i=0;
-            for (String id : md.keySet()) {
-                if(i!=0) q+= " OR ";
-                q +="("+id+")";
-                i++;
-            }
-        }
+		if (md.keySet().size() > 0) {
+			q = "";
+			int i = 0;
+			for (String id : md.keySet()) {
+				if (i != 0)
+					q += " OR ";
+				q += "(" + id + ")";
+				i++;
+			}
+		}
 		return q;
 	}
 }

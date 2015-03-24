@@ -18,8 +18,6 @@ package es.eucm.mokap.backend.controller.search;
 
 import es.eucm.mokap.backend.model.search.SearchParams;
 
-import java.io.IOException;
-
 /**
  * Created by mario on 03/12/2014.
  */

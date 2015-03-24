@@ -20,13 +20,22 @@ import es.eucm.mokap.backend.model.TimeSpans;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by reyde_000 on 12/03/2015.
+ * Interface that provides methods to get Analytic reports
  */
 public interface Reporter {
+	/**
+	 * Method that returns a map with the most downloaded files (by file name)
+	 * and the times they have been downloaded in the time span provided.
+	 * 
+	 * @param timeSpan
+	 *            TimeSpans object, represents the period of time to analyze
+	 * @return map with file names and times downloaded
+	 * @throws GeneralSecurityException
+	 * @throws IOException
+	 */
 	Map<String, Integer> getMostDownloaded(TimeSpans timeSpan)
 			throws GeneralSecurityException, IOException;
 }

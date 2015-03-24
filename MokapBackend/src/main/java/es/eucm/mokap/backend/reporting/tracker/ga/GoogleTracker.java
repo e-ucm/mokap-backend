@@ -26,11 +26,12 @@ import java.util.UUID;
  */
 public class GoogleTracker implements Tracker {
 
-	GoogleAnalyticsTracker gat;
+	private GoogleAnalyticsTracker gat;
 	/**
 	 * We get the TID from the properties
 	 */
-	private static String TID = System.getProperty("backend.ANALYTICS_ID");
+	private static final String TID = System
+			.getProperty("backend.ANALYTICS_ID");
 
 	/**
 	 * Default constructor, creates a GoogleAnalyticsAPI object with the TID we

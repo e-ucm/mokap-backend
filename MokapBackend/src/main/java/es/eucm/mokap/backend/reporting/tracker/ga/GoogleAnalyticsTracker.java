@@ -48,7 +48,7 @@ public class GoogleAnalyticsTracker {
 	 */
 	private String gaClientId = "555"; // Anonymous Client ID.
 
-	private URLFetchService urlFetchService = URLFetchServiceFactory
+	private final URLFetchService urlFetchService = URLFetchServiceFactory
 			.getURLFetchService();
 
 	/**

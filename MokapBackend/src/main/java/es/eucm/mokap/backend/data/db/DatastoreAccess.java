@@ -24,7 +24,6 @@ import com.google.appengine.api.search.Index;
 import es.eucm.ead.schemax.repo.RepoElementFields;
 import es.eucm.mokap.backend.model.search.SearchParams;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -31,47 +31,55 @@ import es.eucm.mokap.backend.reporting.reports.Reporter;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by reyde_000 on 16/03/2015.
+ * Implementation of the Reporter interface for Google Analytics
  */
 public class GoogleAnalyticsReporter implements Reporter {
-
-    private static final List SCOPES = Arrays
+	/**
+	 * Parameters for the Google api
+	 */
+	private static final List SCOPES = Arrays
 			.asList(AnalyticsScopes.ANALYTICS_READONLY);
 	private static final HttpTransport TRANSPORT = new NetHttpTransport();
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+	/**
+	 * View ID of Google Analytics
+	 */
 	private static final String VIEW_ID = "98801421";
-    private static final String SERVICE_EMAIL = "912139491009-gmft31poia3fvm8icme0jn30nfuucs8h@developer.gserviceaccount.com";
-    public static final String KEY_FILE = "test-mokap-be685b9eefa5.p12";
+	/**
+	 * e-Mail of the Service Account -> Best moved somewhere
+	 */
+	private static final String SERVICE_EMAIL = "912139491009-gmft31poia3fvm8icme0jn30nfuucs8h@developer.gserviceaccount.com";
+	/**
+	 * route to the Key file fot Oauth2
+	 */
+	private static final String KEY_FILE = "test-mokap-be685b9eefa5.p12";
 
-    @Override
+	@Override
 	public Map<String, Integer> getMostDownloaded(TimeSpans timeSpan)
 			throws GeneralSecurityException, IOException {
 		Map<String, Integer> ret = new HashMap<String, Integer>();
 		GoogleCredential credential = new GoogleCredential.Builder()
-				.setTransport(TRANSPORT)
-                .setJsonFactory(JSON_FACTORY)
-                .setServiceAccountId(SERVICE_EMAIL)
+				.setTransport(TRANSPORT).setJsonFactory(JSON_FACTORY)
+				.setServiceAccountId(SERVICE_EMAIL)
 				.setServiceAccountScopes(SCOPES)
-                .setServiceAccountPrivateKeyFromP12File(
-                        new File(KEY_FILE)).build();
+				.setServiceAccountPrivateKeyFromP12File(new File(KEY_FILE))
+				.build();
 
-		Analytics analytics = new Analytics.Builder(TRANSPORT,
-				JSON_FACTORY, null).setApplicationName("test-mokap")
+		Analytics analytics = new Analytics.Builder(TRANSPORT, JSON_FACTORY,
+				null).setApplicationName("test-mokap")
 				.setHttpRequestInitializer(credential).build();
 
 		Analytics.Data.Ga.Get apiQuery = analytics
 				.data()
 				.ga()
-				.get("ga:" + VIEW_ID, getInitTime(timeSpan), getEndTime(timeSpan), "ga:totalEvents")
-				.setDimensions(
-                        "ga:eventCategory,ga:eventAction,ga:eventLabel")
-                .setSort("-ga:totalEvents")
-                .setFilters("ga:eventCategory==download")
-                .setMaxResults(20);
+				.get("ga:" + VIEW_ID, TimeSpans.getInitTime(timeSpan),
+						TimeSpans.getEndTime(timeSpan), "ga:totalEvents")
+				.setDimensions("ga:eventCategory,ga:eventAction,ga:eventLabel")
+				.setSort("-ga:totalEvents")
+				.setFilters("ga:eventCategory==download").setMaxResults(20);
 
 		try {
 			GaData data = apiQuery.execute();
@@ -81,7 +89,8 @@ public class GoogleAnalyticsReporter implements Reporter {
 				String eventAct = row.get(1);
 				String eventLbl = row.get(2);
 				String eventTot = row.get(3);
-				ret.put(""+eventLbl.replace(".zip",""), Integer.parseInt(eventTot));
+				ret.put("" + eventLbl.replace(".zip", ""),
+						Integer.parseInt(eventTot));
 			}
 			// Success. Do something cool!
 
@@ -97,68 +106,4 @@ public class GoogleAnalyticsReporter implements Reporter {
 		return ret;
 	}
 
-    private String getInitTime(TimeSpans timeSpan) {
-        Calendar cal = getToday();
-
-        switch (timeSpan){
-            case D:
-                return formatDate(cal.getTime());
-            case W:
-                // get start of this week in milliseconds
-                cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-                return formatDate(cal.getTime());
-            case M:
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                return formatDate(cal.getTime());
-            case A:
-                cal.set(Calendar.DAY_OF_YEAR,1);
-                cal.add(Calendar.YEAR,-10);
-                return formatDate(cal.getTime());
-            default:
-                return formatDate(new Date(0));
-
-        }
-    }
-
-    private String getEndTime(TimeSpans timeSpan) {
-        Calendar cal = getToday();
-
-        switch (timeSpan){
-            case D:
-                cal.add(Calendar.DAY_OF_YEAR,1);
-                return formatDate(cal.getTime());
-            case W:
-                // get start of this week in milliseconds
-                cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-                // add 1 week
-                cal.add(Calendar.DAY_OF_YEAR, 7);
-                return formatDate(cal.getTime());
-            case M:
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                cal.add(Calendar.MONTH, 1);
-                return formatDate(cal.getTime());
-            case A:
-                return formatDate(new Date());
-            default:
-                return formatDate(new Date());
-
-        }
-    }
-
-
-    private String formatDate(Date dt){
-        SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
-        String date = dtf.format(dt);
-        return date;
-    }
-
-    private Calendar getToday(){
-        // get today and clear time of day
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MILLISECOND);
-        return cal;
-    }
 }
