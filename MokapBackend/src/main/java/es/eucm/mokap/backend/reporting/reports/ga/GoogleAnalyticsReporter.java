@@ -51,11 +51,13 @@ public class GoogleAnalyticsReporter implements Reporter {
 	/**
 	 * e-Mail of the Service Account -> Best moved somewhere
 	 */
-	private static final String SERVICE_EMAIL = "912139491009-gmft31poia3fvm8icme0jn30nfuucs8h@developer.gserviceaccount.com";
+	private static final String SERVICE_EMAIL = System
+			.getProperty("backend.ANALYTICS_EMAIL");
 	/**
 	 * route to the Key file fot Oauth2
 	 */
-	private static final String KEY_FILE = "test-mokap-be685b9eefa5.p12";
+	private static final String KEY_FILE = System
+			.getProperty("backend.OAUTH2_KEYFILE");
 
 	@Override
 	public Map<String, Integer> getMostDownloaded(TimeSpans timeSpan)
