@@ -25,6 +25,8 @@ import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
 import com.google.gwt.thirdparty.guava.common.io.ByteStreams;
+import es.eucm.mokap.backend.reporting.tracker.Tracker;
+import es.eucm.mokap.backend.reporting.tracker.ga.GoogleTracker;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -68,7 +70,14 @@ public class DownloadServlet extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+
+		// Produce the download
 		GcsFilename fileName = getFileName(req);
+
+		// Track the download in Analytics
+		Tracker rep = new GoogleTracker();
+		rep.reportDownload(req.getParameter("filename"));
+
 		if (SERVE_USING_BLOBSTORE_API) {
 			BlobstoreService blobstoreService = BlobstoreServiceFactory
 					.getBlobstoreService();

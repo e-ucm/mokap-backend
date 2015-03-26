@@ -26,7 +26,6 @@ import es.eucm.mokap.backend.model.search.SearchParams;
 import es.eucm.mokap.backend.model.search.SearchParamsFactory;
 import es.eucm.mokap.backend.server.ServerReturnMessages;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -37,7 +36,7 @@ public class MokapAdminController extends BackendController implements
 		AdminController {
 
 	@Override
-	public String getFeaturedResourcesAsTable() throws IOException {
+	public String getFeaturedResourcesAsTable() throws Exception {
 		Results<ScoredDocument> results = null;
 		SearchParams sp = null;
 		String search = "";

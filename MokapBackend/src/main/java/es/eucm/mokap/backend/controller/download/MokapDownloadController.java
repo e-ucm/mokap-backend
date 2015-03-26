@@ -18,8 +18,8 @@ package es.eucm.mokap.backend.controller.download;
 
 import com.google.gwt.thirdparty.guava.common.io.ByteStreams;
 import es.eucm.mokap.backend.controller.BackendController;
-import es.eucm.mokap.backend.reporting.Reporter;
-import es.eucm.mokap.backend.reporting.ga.GoogleReporter;
+import es.eucm.mokap.backend.reporting.tracker.Tracker;
+import es.eucm.mokap.backend.reporting.tracker.ga.GoogleTracker;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -48,12 +48,12 @@ public class MokapDownloadController extends BackendController implements
 		InputStream bis = null;
 		OutputStream bos = null;
 
+		// Track the download in Analytics
+		Tracker rep = new GoogleTracker();
+		rep.reportDownload(fileName);
+
 		// Read the file
 		bis = st.readFile(fileName);
-
-        // Track the download in Analytics
-        Reporter rep = new GoogleReporter();
-        rep.reportDownload(fileName);
 
 		// Output the file
 		bos = new BufferedOutputStream(outputStream);

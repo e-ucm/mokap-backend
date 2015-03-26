@@ -17,3 +17,5 @@ MokapBackend/war/**
 target
 *.iml
 MokapBackend/src/main/java/META-INF/persistence.xml
+*.p12
+MokapBackend/src/main/webapp/WEB-INF/appengine-web.xml

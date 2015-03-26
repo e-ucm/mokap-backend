@@ -26,7 +26,6 @@ import es.eucm.mokap.backend.model.response.SearchResponse;
 import es.eucm.mokap.backend.model.search.SearchParams;
 
 import java.io.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class MokapSearchController extends BackendController implements
 	 * </pre>
 	 * 
 	 * ) to allow the client to continue iterating the search results. If
-	 * searchCursor is empty, the method will assume it's a first query. The
+	 * searchCursor is empty, the method will assume it's a first reports. The
 	 * results and cursor string are embedded into a JSON String of the type
 	 * es.eucm.mokap.model.response.SearchResponse.
 	 * 
@@ -62,7 +61,7 @@ public class MokapSearchController extends BackendController implements
 	 *         es.eucm.mokap.model.response.SearchResponse
 	 */
 	@Override
-	public String performSearch(SearchParams sp) throws IOException {
+	public String performSearch(SearchParams sp) throws Exception {
 		SearchResponse gr = new SearchResponse();
 		Results<ScoredDocument> results = db.searchByString(sp);
 		if (results.getCursor() != null)

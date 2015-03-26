@@ -14,14 +14,14 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package es.eucm.mokap.backend.reporting;
+package es.eucm.mokap.backend.reporting.tracker;
 
 import java.io.IOException;
 
 /**
  * Created by reyde_000 on 09/03/2015.
  */
-public interface Reporter {
+public interface Tracker {
 	/**
 	 * Reports the download of a file
 	 * 

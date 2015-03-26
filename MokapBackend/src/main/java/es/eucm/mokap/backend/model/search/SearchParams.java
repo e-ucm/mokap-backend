@@ -60,10 +60,10 @@ public abstract class SearchParams {
 	}
 
 	/**
-	 * Generates the query we'll use to retrieve the search results from the
+	 * Generates the reports we'll use to retrieve the search results from the
 	 * database
 	 * 
 	 * @return Query String
 	 */
-	public abstract String getSearchQuery();
+	public abstract String getSearchQuery() throws Exception;
 }

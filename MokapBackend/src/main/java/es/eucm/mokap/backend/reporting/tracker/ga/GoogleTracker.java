@@ -14,9 +14,9 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package es.eucm.mokap.backend.reporting.ga;
+package es.eucm.mokap.backend.reporting.tracker.ga;
 
-import es.eucm.mokap.backend.reporting.Reporter;
+import es.eucm.mokap.backend.reporting.tracker.Tracker;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -24,13 +24,14 @@ import java.util.UUID;
 /**
  * Class that interfaces between the application and the Google API
  */
-public class GoogleReporter implements Reporter {
+public class GoogleTracker implements Tracker {
 
-	GoogleAnalyticsAPI gat;
+	private GoogleAnalyticsTracker gat;
 	/**
 	 * We get the TID from the properties
 	 */
-	private static String TID = System.getProperty("backend.ANALYTICS_ID");
+	private static final String TID = System
+			.getProperty("backend.ANALYTICS_ID");
 
 	/**
 	 * Default constructor, creates a GoogleAnalyticsAPI object with the TID we
@@ -40,14 +41,14 @@ public class GoogleReporter implements Reporter {
 	 * 
 	 * @throws IOException
 	 */
-	public GoogleReporter() throws IOException {
-		gat = new GoogleAnalyticsAPI(TID);
+	public GoogleTracker() throws IOException {
+		gat = new GoogleAnalyticsTracker(TID);
 		gat.setGoogleAnalyticsClientId(UUID.randomUUID().toString());
 	}
 
 	@Override
 	public void reportDownload(String fileName) throws IOException {
-		gat.trackEventToGoogleAnalytics("download", fileName, "", "1",
-				System.getProperty("backend.BASE_URL"));
+		gat.trackEventToGoogleAnalytics("download", fileName, fileName, "1",
+				"mokap-backend");
 	}
 }

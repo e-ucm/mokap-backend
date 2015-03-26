@@ -38,8 +38,8 @@ public class Utils {
 	public static String generateTempFileName(String fileName) {
 		long timestamp = new Date().getTime();
 		double rnd = 1 + Math.random() * 9999;
-		String tempFileName = (timestamp + rnd + fileName).replace('.', '_');
-		return tempFileName;
+		return (timestamp + rnd + fileName).replace('.', '_');
+
 	}
 
 	/**

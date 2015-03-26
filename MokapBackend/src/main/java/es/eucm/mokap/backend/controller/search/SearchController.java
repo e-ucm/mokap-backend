@@ -18,8 +18,6 @@ package es.eucm.mokap.backend.controller.search;
 
 import es.eucm.mokap.backend.model.search.SearchParams;
 
-import java.io.IOException;
-
 /**
  * Created by mario on 03/12/2014.
  */
@@ -35,7 +33,7 @@ public interface SearchController {
 	 * </pre>
 	 * 
 	 * ) to allow the client to continue iterating the search results. If
-	 * searchCursor is empty, the method will assume it's a first query. The
+	 * searchCursor is empty, the method will assume it's a first reports. The
 	 * results and cursor string are embedded into a JSON String of the type
 	 * es.eucm.mokap.model.response.SearchResponse.
 	 * 
@@ -48,5 +46,5 @@ public interface SearchController {
 	 * @return JSON String of the type
 	 *         es.eucm.mokap.model.response.SearchResponse
 	 */
-	String performSearch(SearchParams sp) throws IOException;
+	String performSearch(SearchParams sp) throws Exception;
 }
