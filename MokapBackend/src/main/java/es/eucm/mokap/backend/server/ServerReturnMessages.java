@@ -133,6 +133,11 @@ public class ServerReturnMessages {
 	public static final String INVALID_FEATURE_ID = "ERROR: The id supplied does not exist or is invalid.";
 
 	/**
+	 * Error message returned when trying to use an invalid resource id.
+	 */
+	public static final String INVALID_RESOURCE_ID = "ERROR: The id supplied does not exist or is invalid.";
+
+	/**
 	 * Creates a return message of the given type with the given parameters.
 	 * Parameters are placed into messageType in the appropriate place holder.
 	 * For example, given that messageType is

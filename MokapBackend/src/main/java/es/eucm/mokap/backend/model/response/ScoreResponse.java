@@ -14,30 +14,33 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package es.eucm.mokap.backend.reporting.tracker;
-
-import java.io.IOException;
+package es.eucm.mokap.backend.model.response;
 
 /**
- * Created by reyde_000 on 09/03/2015.
+ * Created by reyde_000 on 05/05/2015.
  */
-public interface Tracker {
-	/**
-	 * Reports the download of a file
-	 * 
-	 * @param fileName
-	 *            name of the file
-	 */
-	public void reportDownload(String fileName) throws IOException;
+public class ScoreResponse extends Response {
+	private String resourceId;
+	private double score;
 
-	/**
-	 * Casts a vote for a resource
-	 * 
-	 * @param resourceId
-	 *            ID of the resource
-	 * @param score
-	 *            score of the vote
-	 */
-	void castVote(String resourceId, String score) throws IOException;
+	public ScoreResponse(String id, double score) {
+		this.resourceId = id;
+		this.score = score;
+	}
 
+	public String getResourceId() {
+		return resourceId;
+	}
+
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
+
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
 }

@@ -25,6 +25,16 @@
     <servlet-name>download</servlet-name>
     <url-pattern>/download</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>vote</servlet-name>
+    <servlet-class>es.eucm.mokap.backend.server.ResourceVote</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>vote</servlet-name>
+    <url-pattern>/vote</url-pattern>
+  </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>

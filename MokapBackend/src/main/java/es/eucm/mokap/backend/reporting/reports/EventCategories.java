@@ -14,30 +14,23 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package es.eucm.mokap.backend.reporting.tracker;
-
-import java.io.IOException;
+package es.eucm.mokap.backend.reporting.reports;
 
 /**
- * Created by reyde_000 on 09/03/2015.
+ * Enum with the different event categories we are using for the events in our
+ * reports.
  */
-public interface Tracker {
-	/**
-	 * Reports the download of a file
-	 * 
-	 * @param fileName
-	 *            name of the file
-	 */
-	public void reportDownload(String fileName) throws IOException;
+public enum EventCategories {
+	EC_VOTE("vote"), EC_DOWNLOAD("download");
 
-	/**
-	 * Casts a vote for a resource
-	 * 
-	 * @param resourceId
-	 *            ID of the resource
-	 * @param score
-	 *            score of the vote
-	 */
-	void castVote(String resourceId, String score) throws IOException;
+	private String value;
+
+	private EventCategories(String val) {
+		this.value = val;
+	}
+
+	public String getValue() {
+		return this.value;
+	}
 
 }

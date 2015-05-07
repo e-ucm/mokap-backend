@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import es.eucm.ead.schemax.repo.RepoRequestFields;
 import es.eucm.ead.schemax.repo.SearchRequestFields;
+import es.eucm.mokap.backend.utils.Utils;
 
 /**
  * 
@@ -36,8 +37,8 @@ public class SearchParamsFactory {
 	 * @return SearchParams object
 	 */
 	public static SearchParams create(HttpServletRequest req) {
-		String width = getParameterValue(RepoRequestFields.W, req);
-		String height = getParameterValue(RepoRequestFields.H, req);
+		String width = Utils.getParameterValue(RepoRequestFields.W, req);
+		String height = Utils.getParameterValue(RepoRequestFields.H, req);
 		if (width == null) {
 			width = SearchParams.DEFAULT_WIDTH;
 		}
@@ -45,35 +46,38 @@ public class SearchParamsFactory {
 			height = SearchParams.DEFAULT_HEIGHT;
 		}
 
-		if (getParameterValue("f", req) != null) { // TODO Add f to
-													// SearchRequestFields or
-													// RepoRequestFields
-			return new FeaturedSearchParams(getParameterValue("f", req), width,
-					height);
-		} else if (getParameterValue("id", req) != null) { // TODO Add id to
-															// SearchRequestFields,
-															// Control the
-															// exception in case
-															// we get a String
-															// that is not valid
-			long id = Long.parseLong(getParameterValue("id", req));
+		if (Utils.getParameterValue("f", req) != null) { // TODO Add f to
+			// SearchRequestFields or
+			// RepoRequestFields
+			return new FeaturedSearchParams(Utils.getParameterValue("f", req),
+					width, height);
+		} else if (Utils.getParameterValue("id", req) != null) { // TODO Add id
+																	// to
+			// SearchRequestFields,
+			// Control the
+			// exception in case
+			// we get a String
+			// that is not valid
+			long id = Long.parseLong(Utils.getParameterValue("id", req));
 			return new IdSearchParams(id, width, height);
-		} else if (getParameterValue("md", req) != null) { // Most Downloaded
-			return new MostDownloadedSearchParams(getParameterValue("md", req)); // with
-																					// parameter
-																					// for
-																					// the
-																					// time
-																					// span
-																					// we're
-																					// analyzing
+		} else if (Utils.getParameterValue("md", req) != null) { // Most
+																	// Downloaded
+			return new MostDownloadedSearchParams(Utils.getParameterValue("md",
+					req)); // with
+							// parameter
+							// for
+							// the
+							// time
+							// span
+							// we're
+							// analyzing
 		} else {
-			return new TextSearchParams(getParameterValue(
-					SearchRequestFields.Q, req), getParameterValue(
-					RepoRequestFields.P, req), getParameterValue(
-					RepoRequestFields.L, req), getParameterValue(
-					RepoRequestFields.CAT, req), getParameterValue(
-					RepoRequestFields.T, req), getParameterValue(
+			return new TextSearchParams(Utils.getParameterValue(
+					SearchRequestFields.Q, req), Utils.getParameterValue(
+					RepoRequestFields.P, req), Utils.getParameterValue(
+					RepoRequestFields.L, req), Utils.getParameterValue(
+					RepoRequestFields.CAT, req), Utils.getParameterValue(
+					RepoRequestFields.T, req), Utils.getParameterValue(
 					SearchRequestFields.C, req), width, height);
 		}
 	}
@@ -104,27 +108,4 @@ public class SearchParamsFactory {
 				SearchParams.DEFAULT_HEIGHT);
 	}
 
-	/**
-	 * Gets the value of a parameter received either in the url or in a header.
-	 * If it's received in both, the header value prevails.
-	 * 
-	 * @param paramName
-	 *            Name of the parameter to look for
-	 * @param req
-	 *            Request containing the parameter
-	 * @return String with the value of the parameter
-	 */
-	private static String getParameterValue(String paramName,
-			HttpServletRequest req) {
-		String value = null;
-		String paramHeader = req.getHeader(paramName);
-		String paramUrl = req.getParameter(paramName);
-		if (paramUrl != null) {
-			value = paramUrl;
-		}
-		if (paramHeader != null) {
-			value = paramHeader;
-		}
-		return value;
-	}
 }

@@ -16,6 +16,7 @@
  */
 package es.eucm.mokap.backend.reporting.tracker.ga;
 
+import es.eucm.mokap.backend.reporting.reports.EventCategories;
 import es.eucm.mokap.backend.reporting.tracker.Tracker;
 
 import java.io.IOException;
@@ -32,6 +33,9 @@ public class GoogleTracker implements Tracker {
 	 */
 	private static final String TID = System
 			.getProperty("backend.ANALYTICS_ID");
+	private static final String EC_VOTE = EventCategories.EC_VOTE.getValue();
+	private static final String EC_DOWNLOAD = EventCategories.EC_DOWNLOAD
+			.getValue();
 
 	/**
 	 * Default constructor, creates a GoogleAnalyticsAPI object with the TID we
@@ -48,7 +52,13 @@ public class GoogleTracker implements Tracker {
 
 	@Override
 	public void reportDownload(String fileName) throws IOException {
-		gat.trackEventToGoogleAnalytics("download", fileName, fileName, "1",
-				"mokap-backend");
+		gat.trackEventToGoogleAnalytics(EC_DOWNLOAD, fileName, fileName, "1",
+				System.getProperty("backend.APP_NAME"));
+	}
+
+	@Override
+	public void castVote(String resourceId, String score) throws IOException {
+		gat.trackEventToGoogleAnalytics(EC_VOTE, resourceId, resourceId, score,
+				System.getProperty("backend.APP_NAME"));
 	}
 }

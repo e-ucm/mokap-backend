@@ -28,6 +28,7 @@
     <property name="backend.ANALYTICS_ID" value="UA-XXXXXXX-X" />
     <property name="backend.ANALYTICS_EMAIL" value="xxxx@xxxxx" />
     <property name="backend.OAUTH2_KEYFILE" value="xxxxxxxxx.p12" />
+      <property name="backend.APP_NAME" value="mokap-backend" />
 
   </system-properties>
 

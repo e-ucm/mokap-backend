@@ -26,6 +26,7 @@ import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
 import com.google.api.services.analytics.model.GaData;
 import es.eucm.mokap.backend.model.TimeSpans;
+import es.eucm.mokap.backend.reporting.reports.EventCategories;
 import es.eucm.mokap.backend.reporting.reports.Reporter;
 
 import java.io.File;
@@ -44,6 +45,12 @@ public class GoogleAnalyticsReporter implements Reporter {
 			.asList(AnalyticsScopes.ANALYTICS_READONLY);
 	private static final HttpTransport TRANSPORT = new NetHttpTransport();
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+	private static final Integer MAX_RESULTS = 20;
+	private static final String EC_DOWNLOAD = EventCategories.EC_DOWNLOAD
+			.getValue();
+	private static final String EC_VOTE = EventCategories.EC_VOTE.getValue();
+	private static final String APP_NAME = System
+			.getProperty("backend.APP_NAME");
 	/**
 	 * View ID of Google Analytics
 	 */
@@ -62,17 +69,36 @@ public class GoogleAnalyticsReporter implements Reporter {
 	@Override
 	public Map<String, Integer> getMostDownloaded(TimeSpans timeSpan)
 			throws GeneralSecurityException, IOException {
-		Map<String, Integer> ret = new HashMap<String, Integer>();
-		GoogleCredential credential = new GoogleCredential.Builder()
-				.setTransport(TRANSPORT).setJsonFactory(JSON_FACTORY)
-				.setServiceAccountId(SERVICE_EMAIL)
-				.setServiceAccountScopes(SCOPES)
-				.setServiceAccountPrivateKeyFromP12File(new File(KEY_FILE))
-				.build();
+		Map<String, List<String>> events = getEventsFromCategory(EC_DOWNLOAD,
+				timeSpan);
+		Map<String, Integer> downloaded = new HashMap<String, Integer>();
+		for (String k : events.keySet()) {
+			List<String> l = events.get(k);
+			String eventTot = l.get(3);
+			downloaded.put(k, Integer.parseInt(eventTot));
+		}
+		return downloaded;
+	}
 
-		Analytics analytics = new Analytics.Builder(TRANSPORT, JSON_FACTORY,
-				null).setApplicationName("test-mokap")
-				.setHttpRequestInitializer(credential).build();
+	/**
+	 * Gets from Analytics a map of events that occurred in the selected
+	 * timespan and correspond to the category received.
+	 * 
+	 * @param cat
+	 *            category of the event
+	 * @param timeSpan
+	 *            time span of the events
+	 * @return Map<String, List<String>> with the name of the event and all the
+	 *         related data on a list
+	 * @throws GeneralSecurityException
+	 * @throws IOException
+	 */
+	private Map<String, List<String>> getEventsFromCategory(String cat,
+			TimeSpans timeSpan) throws GeneralSecurityException, IOException {
+		Map<String, List<String>> ret = new HashMap<String, List<String>>();
+		GoogleCredential credential = getGoogleCredential();
+
+		Analytics analytics = getAnalyticsObject(credential);
 
 		Analytics.Data.Ga.Get apiQuery = analytics
 				.data()
@@ -81,7 +107,8 @@ public class GoogleAnalyticsReporter implements Reporter {
 						TimeSpans.getEndTime(timeSpan), "ga:totalEvents")
 				.setDimensions("ga:eventCategory,ga:eventAction,ga:eventLabel")
 				.setSort("-ga:totalEvents")
-				.setFilters("ga:eventCategory==download").setMaxResults(20);
+				.setFilters("ga:eventCategory==" + cat)
+				.setMaxResults(MAX_RESULTS);
 
 		try {
 			GaData data = apiQuery.execute();
@@ -91,8 +118,7 @@ public class GoogleAnalyticsReporter implements Reporter {
 				String eventAct = row.get(1);
 				String eventLbl = row.get(2);
 				String eventTot = row.get(3);
-				ret.put("" + eventLbl.replace(".zip", ""),
-						Integer.parseInt(eventTot));
+				ret.put(eventLbl.replace(".zip", ""), row);
 			}
 			// Success. Do something cool!
 
@@ -106,6 +132,85 @@ public class GoogleAnalyticsReporter implements Reporter {
 		}
 
 		return ret;
+	}
+
+	/**
+	 * Gets the average value of the Action field in the events with the eventId
+	 * supplied.
+	 * 
+	 * @param eventId
+	 * @return
+	 * @throws GeneralSecurityException
+	 * @throws IOException
+	 */
+	public double getEventAvgValueByAction(String eventId)
+			throws GeneralSecurityException, IOException {
+		double avg = 0;
+
+		GoogleCredential credential = getGoogleCredential();
+
+		Analytics analytics = getAnalyticsObject(credential);
+
+		Analytics.Data.Ga.Get apiQuery = analytics
+				.data()
+				.ga()
+				.get("ga:" + VIEW_ID, TimeSpans.getInitTime(TimeSpans.A),
+						TimeSpans.getEndTime(TimeSpans.A), "ga:avgEventValue")
+				.setDimensions("ga:eventCategory,ga:eventAction")
+				.setFilters(
+						"ga:eventAction==" + eventId + ";ga:eventCategory=="
+								+ EC_VOTE).setMaxResults(200);
+
+		try {
+			GaData data = apiQuery.execute();
+
+			for (List<String> row : data.getRows()) {
+				String eventAct = row.get(1);
+				String eventVal = row.get(2);
+				avg = Double.parseDouble(eventVal);
+
+			}
+
+		} catch (GoogleJsonResponseException e) {
+			// Catch API specific errors.
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			// Catch general parsing network errors.
+			e.printStackTrace();
+		}
+
+		return avg;
+	}
+
+	/**
+	 * Creates the credentials needed to connect to Analytics
+	 * 
+	 * @return GoogleCredential object
+	 * @throws GeneralSecurityException
+	 * @throws IOException
+	 */
+	private GoogleCredential getGoogleCredential()
+			throws GeneralSecurityException, IOException {
+		return new GoogleCredential.Builder().setTransport(TRANSPORT)
+				.setJsonFactory(JSON_FACTORY)
+				.setServiceAccountId(SERVICE_EMAIL)
+				.setServiceAccountScopes(SCOPES)
+				.setServiceAccountPrivateKeyFromP12File(new File(KEY_FILE))
+				.build();
+	}
+
+	/**
+	 * Creates the analytics object with the credentials supplied
+	 * 
+	 * @param credential
+	 *            GoogleCredential object
+	 * @return
+	 */
+	private Analytics getAnalyticsObject(GoogleCredential credential) {
+		return new Analytics.Builder(TRANSPORT, JSON_FACTORY, null)
+				.setApplicationName(APP_NAME)
+				.setHttpRequestInitializer(credential).build();
 	}
 
 }

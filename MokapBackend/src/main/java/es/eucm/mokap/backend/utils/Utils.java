@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Class with some useful static methods.
  */
@@ -61,5 +63,29 @@ public class Utils {
 				entMap.getClass());
 
 		return entMap;
+	}
+
+	/**
+	 * Gets the value of a parameter received either in the url or in a header.
+	 * If it's received in both, the header value prevails.
+	 * 
+	 * @param paramName
+	 *            Name of the parameter to look for
+	 * @param req
+	 *            Request containing the parameter
+	 * @return String with the value of the parameter
+	 */
+	public static String getParameterValue(String paramName,
+			HttpServletRequest req) {
+		String value = null;
+		String paramHeader = req.getHeader(paramName);
+		String paramUrl = req.getParameter(paramName);
+		if (paramUrl != null) {
+			value = paramUrl;
+		}
+		if (paramHeader != null) {
+			value = paramHeader;
+		}
+		return value;
 	}
 }

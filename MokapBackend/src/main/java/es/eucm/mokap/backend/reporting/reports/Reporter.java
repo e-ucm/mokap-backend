@@ -38,4 +38,16 @@ public interface Reporter {
 	 */
 	Map<String, Integer> getMostDownloaded(TimeSpans timeSpan)
 			throws GeneralSecurityException, IOException;
+
+	/**
+	 * Gets the average value of the Action field in the events with the eventId
+	 * supplied.
+	 * 
+	 * @param eventId
+	 * @return
+	 * @throws GeneralSecurityException
+	 * @throws IOException
+	 */
+	double getEventAvgValueByAction(String eventId)
+			throws GeneralSecurityException, IOException;
 }

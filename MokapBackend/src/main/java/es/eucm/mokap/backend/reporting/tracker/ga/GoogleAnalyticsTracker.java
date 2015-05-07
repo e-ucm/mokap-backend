@@ -117,7 +117,7 @@ public class GoogleAnalyticsTracker {
 		request.addHeader(CONTENT_TYPE_HEADER);
 
 		HTTPResponse httpResponse = urlFetchService.fetch(request);
-		// TODO TESTING
+
 		System.out.println(url);
 		System.out.println(httpResponse.getResponseCode());
 
